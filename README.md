@@ -1,22 +1,22 @@
 <p align="center">
 <a href="https://github.com/vueuse/vueuse#gh-light-mode-only">
-  <img src="https://raw.githubusercontent.com/vueuse/vueuse/main/packages/public/logo-vertical.png#gh-light-mode-only" alt="VueUse - Collection of essential Vue Composition Utilities" width="300">
+  <img src="https://raw.githubusercontent.com/vueuse/vueuse/main/packages/public/logo-vertical.png#gh-light-mode-only" alt="VueUse - Vue组合式API工具集合" width="300">
 </a>
 <a href="https://github.com/vueuse/vueuse#gh-dark-mode-only">
-  <img src="https://raw.githubusercontent.com/vueuse/vueuse/main/packages/public/logo-vertical-dark.png#gh-dark-mode-only" alt="VueUse - Collection of essential Vue Composition Utilities" width="300">
+  <img src="https://raw.githubusercontent.com/vueuse/vueuse/main/packages/public/logo-vertical-dark.png#gh-dark-mode-only" alt="VueUse - Vue组合式API工具集合" width="300">
 </a>
 <br>
-Collection of essential Vue Composition Utilities
+Vue组合式API实用工具集合
 </p>
 
 <p align="center">
-<a href="https://www.npmjs.com/package/@vueuse/core" target="__blank"><img src="https://img.shields.io/npm/v/@vueuse/core?color=a1b858&label=" alt="NPM version"></a>
-<a href="https://www.npmjs.com/package/@vueuse/core" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/@vueuse/core?color=50a36f&label="></a>
-<a href="https://app.codecov.io/gh/vueuse/vueuse"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/vueuse/vueuse?color=42b883&labelColor=354a5e"></a>
-<a href="https://vueuse.org" target="__blank"><img src="https://img.shields.io/static/v1?label=&message=docs%20%26%20demos&color=1e8a7a" alt="Docs & Demos"></a>
-<img alt="Function Count" src="https://vueuse.org/badge-function-count.svg">
+<a href="https://www.npmjs.com/package/@vueuse/core" target="__blank"><img src="https://img.shields.io/npm/v/@vueuse/core?color=a1b858&label=" alt="NPM版本"></a>
+<a href="https://www.npmjs.com/package/@vueuse/core" target="__blank"><img alt="NPM下载量" src="https://img.shields.io/npm/dm/@vueuse/core?color=50a36f&label="></a>
+<a href="https://app.codecov.io/gh/vueuse/vueuse"><img alt="代码覆盖率" src="https://img.shields.io/codecov/c/github/vueuse/vueuse?color=42b883&labelColor=354a5e"></a>
+<a href="https://vueuse.org" target="__blank"><img src="https://img.shields.io/static/v1?label=&message=文档%20%26%20演示&color=1e8a7a" alt="文档与演示"></a>
+<img alt="函数数量" src="https://vueuse.org/badge-function-count.svg">
 <br>
-<a href="https://github.com/vueuse/vueuse" target="__blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/vueuse/vueuse?style=social"></a>
+<a href="https://github.com/vueuse/vueuse" target="__blank"><img alt="GitHub星标" src="https://img.shields.io/github/stars/vueuse/vueuse?style=social"></a>
 </p>
 
 <p align="center">
@@ -25,27 +25,27 @@ Collection of essential Vue Composition Utilities
   </a>
 </p>
 
-## 🚀 Features
+## 🚀 特性
 
-- 🎪 [**Interactive docs & demos**](https://vueuse.org)
-- ⚡ **Fully tree shakeable**: Only take what you want, [bundle size](https://vueuse.org/export-size)
-- 🦾 **Type Strong**: Written in [TypeScript](https://www.typescriptlang.org/), with [TS Docs](https://github.com/microsoft/tsdoc)
-- 🔋 **SSR Friendly**
-- 🌎 **No bundler required**: Usable via CDN
-- 🔩 **Flexible**: Configurable event filters and targets
-- 🔌 **Optional [Add-ons](https://vueuse.org/add-ons)**: Router, Firebase, RxJS, etc.
+- 🎪 [**交互式文档与演示**](https://vueuse.org)
+- ⚡ **完全可摇树优化**：只取你需要的，[打包体积小](https://vueuse.org/export-size)
+- 🦾 **强类型**：使用[TypeScript](https://www.typescriptlang.org/)编写，带有[TS文档](https://github.com/microsoft/tsdoc)
+- 🔋 **SSR友好**
+- 🌎 **无需打包工具**：可通过CDN使用
+- 🔩 **灵活**：可配置的事件过滤器和目标
+- 🔌 **可选[附加组件](https://vueuse.org/add-ons)**：路由器、Firebase、RxJS等
 
-## 🦄 Usage
+## 🦄 使用
 
 ```ts
 import { useLocalStorage, useMouse, usePreferredDark } from '@vueuse/core'
 
 const { x, y } = useMouse()
 
-// if user prefers dark theme
+// 如果用户偏好深色主题
 const isDark = usePreferredDark()
 
-// persist state in localStorage
+// 在localStorage中持久化状态
 const store = useLocalStorage(
   'my-storage',
   {
@@ -55,21 +55,21 @@ const store = useLocalStorage(
 )
 ```
 
-Refer to [functions list](https://vueuse.org/functions) or [documentations](https://vueuse.org/) for more details.
+参考[函数列表](https://vueuse.org/functions)或[文档](https://vueuse.org/)了解更多详情。
 
-## 📦 Install
+## 📦 安装
 
-> From v14.0, VueUse requires Vue v3.5+
-> From v13.0, VueUse requires Vue v3.3+
-> From v12.0, VueUse no longer supports Vue 2. Please use v11.x for Vue 2 support.
+> 从v14.0开始，VueUse需要Vue v3.5+
+> 从v13.0开始，VueUse需要Vue v3.3+
+> 从v12.0开始，VueUse不再支持Vue 2。请使用v11.x以支持Vue 2。
 
 ```bash
 npm i @vueuse/core
 ```
 
-[Add ons](https://vueuse.org/add-ons.html) | [Nuxt Module](https://vueuse.org/guide/index.html#nuxt)
+[附加组件](https://vueuse.org/add-ons.html) | [Nuxt模块](https://vueuse.org/guide/index.html#nuxt)
 
-###### Demos
+###### 演示
 
 - [Vite + Vue 3](https://github.com/vueuse/vueuse-vite-starter)
 - [Nuxt 3 + Vue 3](https://github.com/antfu/vitesse-nuxt3)
@@ -83,33 +83,33 @@ npm i @vueuse/core
 <script src="https://unpkg.com/@vueuse/core"></script>
 ```
 
-It will be exposed to global as `window.VueUse`
+它将作为`window.VueUse`暴露到全局
 
-## 🪴 Project Activity
+## 🪴 项目活动
 
-![Alt](https://repobeats.axiom.co/api/embed/a406ba7461a6a087dbdb14d4395046c948d44c51.svg 'Repobeats analytics image')
+![Alt](https://repobeats.axiom.co/api/embed/a406ba7461a6a087dbdb14d4395046c948d44c51.svg 'Repobeats分析图像')
 
-## 🧱 Contribute
+## 🧱 贡献
 
-See the [**Contributing Guide**](https://vueuse.org/contributing)
+查看[**贡献指南**](https://vueuse.org/contributing)
 
-## 🌸 Thanks
+## 🌸 致谢
 
-This project is heavily inspired by the following awesome projects.
+这个项目深受以下优秀项目的启发：
 
 - [streamich/react-use](https://github.com/streamich/react-use)
 - [u3u/vue-hooks](https://github.com/u3u/vue-hooks)
 - [logaretm/vue-use-web](https://github.com/logaretm/vue-use-web)
 - [kripod/react-hooks](https://github.com/kripod/react-hooks)
 
-And thanks to [all the contributors on GitHub](https://github.com/vueuse/vueuse/graphs/contributors)!
+并感谢[GitHub上的所有贡献者](https://github.com/vueuse/vueuse/graphs/contributors)！
 
-## 👨‍🚀 Contributors
+## 👨‍🚀 贡献者
 
-### Financial Contributors on Open Collective
+### Open Collective上的财务贡献者
 
 <a href="https://opencollective.com/vueuse"><img src="https://opencollective.com/vueuse/individuals.svg?width=890"></a>
 
-## 📄 License
+## 📄 许可证
 
-[MIT License](https://github.com/vueuse/vueuse/blob/main/LICENSE) © 2019-PRESENT [Anthony Fu](https://github.com/antfu)
+[MIT许可证](https://github.com/vueuse/vueuse/blob/main/LICENSE) © 2019-至今 [Anthony Fu](https://github.com/antfu)

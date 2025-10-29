@@ -1,56 +1,52 @@
 ---
 layout: home
-sidebar: false
 
 hero:
   name: VueUse
-  text: Collection of Vue Composition Utilities
-  tagline: Collection of Essential Vue Composition Utilities
+  text: Vue组合式API实用工具集合
+  tagline: 从头开始为Vue构建的实用工具集合
   image:
-    src: /favicon.svg
+    src: /logo.svg
     alt: VueUse
   actions:
     - theme: brand
-      text: Get Started
+      text: 开始使用
       link: /guide/
     - theme: alt
-      text: Functions
-      link: /functions
-    - theme: alt
-      text: Add-ons
-      link: /add-ons
-    - theme: alt
-      text: View on GitHub
+      text: 在GitHub上查看
       link: https://github.com/vueuse/vueuse
+    - theme: alt
+      text: 函数列表
+      link: /functions/
 
 features:
-  - title: Feature Rich
-    details: 200+ functions for you to choose from
-    icon: 🎛
-  - title: Built for Vue 3
-    details: Designed for Vue 3 to take full advantage of its latest capabilities
-    icon: 🚀
-  - title: Fully tree shakeable
-    details: Only take what you want
-    icon: ⚡
-  - title: Type Strong
-    details: Written in TypeScript, with full TS docs
-    icon: 🦾
-  - title: Flexible
-    details: Passing refs as arguments, fully customizable, configurable event filters and targets
-    icon: 🛠
-  - title: No bundler required
-    details: Usable via CDN, without any bundlers
-    icon: ☁️
-  - title: SSR Friendly
-    details: Works perfectly with server-side rendering/generation
-    icon: 🔋
-  - title: Interactive demos
-    details: Documentation of functions also come with interactive demos!
-    icon: 🎪
-  - title: Add-ons
-    details: Support various add-ons like Router, Firebase, RxJS, etc.
-    icon: 🔌
+  - icon: 🚀
+    title: 功能丰富
+    details: 超过200个实用工具，涵盖从浏览器API到状态管理的各种需求
+  - icon: 🧩
+    title: 模块化设计
+    details: 只导入你需要的功能，摇树优化确保打包体积最小
+  - icon: 🔌
+    title: 附加组件支持
+    details: 可选的附加组件，支持路由、Firebase、RxJS等
+  - icon: 🦾
+    title: 强类型
+    details: 使用TypeScript编写，提供完整的类型支持
+  - icon: 🔋
+    title: SSR友好
+    details: 支持服务端渲染，兼容Nuxt.js
+  - icon: 🌍
+    title: 无需构建工具
+    details: 可直接通过CDN使用
+  - icon: 📖
+    title: 详细文档
+    details: 每个函数都有详细的文档和示例
+  - icon: 🧪
+    title: 全面测试
+    details: 覆盖率超过95%，确保稳定性
+  - icon: 🎯
+    title: Vue 3原生支持
+    details: 充分利用Vue 3的组合式API特性
 ---
 
 <Home />
