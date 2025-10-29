@@ -32,7 +32,7 @@ function createKeyPredicate(keyFilter: KeyFilter): KeyPredicate {
 }
 
 /**
- * Listen for keyboard keystrokes.
+ * 监听键盘按键。
  *
  * @see https://vueuse.org/onKeyStroke
  */
@@ -83,7 +83,7 @@ export function onKeyStroke(...args: any[]) {
 }
 
 /**
- * Listen to the keydown event of the given key.
+ * 监听给定键的keydown事件。
  *
  * @see https://vueuse.org/onKeyStroke
  * @param key
@@ -95,7 +95,7 @@ export function onKeyDown(key: KeyFilter, handler: (event: KeyboardEvent) => voi
 }
 
 /**
- * Listen to the keypress event of the given key.
+ * 监听给定键的keypress事件。
  *
  * @see https://vueuse.org/onKeyStroke
  * @param key
@@ -107,7 +107,7 @@ export function onKeyPressed(key: KeyFilter, handler: (event: KeyboardEvent) => 
 }
 
 /**
- * Listen to the keyup event of the given key.
+ * 监听给定键的keyup事件。
  *
  * @see https://vueuse.org/onKeyStroke
  * @param key

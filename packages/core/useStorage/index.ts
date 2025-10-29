@@ -9,16 +9,31 @@ import { getSSRHandler } from '../ssr-handlers'
 import { useEventListener } from '../useEventListener'
 import { guessSerializerType } from './guess'
 
+/**
+ * 数据序列化接口
+ * @template T 数据类型
+ */
 export interface Serializer<T> {
+  /** 从字符串读取数据 */
   read: (raw: string) => T
+  /** 将数据写入字符串 */
   write: (value: T) => string
 }
 
+/**
+ * 异步数据序列化接口
+ * @template T 数据类型
+ */
 export interface SerializerAsync<T> {
+  /** 从字符串异步读取数据 */
   read: (raw: string) => Awaitable<T>
+  /** 将数据异步写入字符串 */
   write: (value: T) => Awaitable<string>
 }
 
+/**
+ * 内置的数据序列化器
+ */
 export const StorageSerializers: Record<'boolean' | 'object' | 'number' | 'any' | 'string' | 'map' | 'set' | 'date', Serializer<any>> = {
   boolean: {
     read: (v: any) => v === 'true',
@@ -54,68 +69,80 @@ export const StorageSerializers: Record<'boolean' | 'object' | 'number' | 'any' 
   },
 }
 
+/** 自定义存储事件名称 */
 export const customStorageEventName = 'vueuse-storage'
 
+/**
+ * 存储事件类接口
+ */
 export interface StorageEventLike {
+  /** 存储区域 */
   storageArea: StorageLike | null
+  /** 存储键 */
   key: StorageEvent['key']
+  /** 旧值 */
   oldValue: StorageEvent['oldValue']
+  /** 新值 */
   newValue: StorageEvent['newValue']
 }
 
+/**
+ * useStorage函数的配置选项
+ * @template T 存储的数据类型
+ */
 export interface UseStorageOptions<T> extends ConfigurableEventFilter, ConfigurableWindow, ConfigurableFlush {
   /**
-   * Watch for deep changes
+   * 是否监听深度变化
    *
    * @default true
    */
   deep?: boolean
 
   /**
-   * Listen to storage changes, useful for multiple tabs application
+   * 是否监听存储变化，适用于多标签页应用
    *
    * @default true
    */
   listenToStorageChanges?: boolean
 
   /**
-   * Write the default value to the storage when it does not exist
+   * 当默认值不存在时，是否写入存储
    *
    * @default true
    */
   writeDefaults?: boolean
 
   /**
-   * Merge the default value with the value read from the storage.
+   * 将默认值与从存储中读取的值合并
    *
-   * When setting it to true, it will perform a **shallow merge** for objects.
-   * You can pass a function to perform custom merge (e.g. deep merge), for example:
+   * 当设置为true时，它将对对象执行**浅合并**。
+   * 你可以传递一个函数来执行自定义合并（例如深度合并），例如：
    *
    * @default false
    */
   mergeDefaults?: boolean | ((storageValue: T, defaults: T) => T)
 
   /**
-   * Custom data serialization
+   * 自定义数据序列化
    */
   serializer?: Serializer<T>
 
   /**
-   * On error callback
+   * 错误回调
    *
-   * Default log error to `console.error`
+   * 默认将错误记录到`console.error`
    */
   onError?: (error: unknown) => void
 
   /**
-   * Use shallow ref as reference
+   * 使用浅层引用作为引用
    *
    * @default false
    */
   shallow?: boolean
 
   /**
-   * Wait for the component to be mounted before reading the storage.
+   * 等待组件挂载后再读取存储
    *
    * @default false
    */
@@ -129,9 +156,14 @@ export function useStorage<T>(key: MaybeRefOrGetter<string>, defaults: MaybeRefO
 export function useStorage<T = unknown>(key: MaybeRefOrGetter<string>, defaults: MaybeRefOrGetter<null>, storage?: StorageLike, options?: UseStorageOptions<T>): RemovableRef<T>
 
 /**
- * Reactive LocalStorage/SessionStorage.
+ * 响应式LocalStorage/SessionStorage操作
  *
  * @see https://vueuse.org/useStorage
+ * @param key 存储键
+ * @param defaults 默认值
+ * @param storage 存储对象，默认为localStorage
+ * @param options 配置选项
+ * @returns 可移除的响应式引用
  */
 export function useStorage<T extends (string | number | boolean | object | null)>(
   key: MaybeRefOrGetter<string>,
@@ -198,10 +230,10 @@ export function useStorage<T extends (string | number | boolean | object | null)
   }
 
   /**
-   * The custom event is needed for same-document syncing when using custom
-   * storage backends, but it doesn't work across different documents.
+   * 当使用自定义存储后端时，需要自定义事件来进行同文档同步，
+   * 但它在不同文档之间不起作用。
    *
-   * TODO: Consider implementing a BroadcastChannel-based solution that fixes this.
+   * TODO: 考虑实现一个基于BroadcastChannel的解决方案来修复这个问题。
    */
   if (window && listenToStorageChanges) {
     if (storage instanceof Storage)
@@ -220,8 +252,13 @@ export function useStorage<T extends (string | number | boolean | object | null)
     update()
   }
 
+  /**
+   * 派发写入事件
+   * @param oldValue 旧值
+   * @param newValue 新值
+   */
   function dispatchWriteEvent(oldValue: string | null, newValue: string | null) {
-    // send custom event to communicate within same page
+    // 发送自定义事件在同一页面内通信
     if (window) {
       const payload = {
         key: keyComputed.value,
@@ -229,8 +266,8 @@ export function useStorage<T extends (string | number | boolean | object | null)
         newValue,
         storageArea: storage as Storage,
       }
-      // We also use a CustomEvent since StorageEvent cannot
-      // be constructed with a non-built-in storage area
+      // 我们也使用CustomEvent，因为StorageEvent不能
+      // 用非内置存储区域构造
       window.dispatchEvent(storage instanceof Storage
         ? new StorageEvent('storage', payload)
         : new CustomEvent<StorageEventLike>(customStorageEventName, {
@@ -239,6 +276,10 @@ export function useStorage<T extends (string | number | boolean | object | null)
     }
   }
 
+  /**
+   * 写入数据到存储
+   * @param v 要写入的值
+   */
   function write(v: unknown) {
     try {
       const oldValue = storage!.getItem(keyComputed.value)
@@ -260,6 +301,11 @@ export function useStorage<T extends (string | number | boolean | object | null)
     }
   }
 
+  /**
+   * 从存储读取数据
+   * @param event 存储事件
+   * @returns 读取的数据
+   */
   function read(event?: StorageEventLike) {
     const rawValue = event
       ? event.newValue
@@ -286,6 +332,10 @@ export function useStorage<T extends (string | number | boolean | object | null)
     }
   }
 
+  /**
+   * 更新数据
+   * @param event 存储事件
+   */
   function update(event?: StorageEventLike) {
     if (event && event.storageArea !== storage)
       return
@@ -311,7 +361,7 @@ export function useStorage<T extends (string | number | boolean | object | null)
       onError(e)
     }
     finally {
-      // use nextTick to avoid infinite loop
+      // 使用nextTick避免无限循环
       if (event)
         nextTick(resumeWatch)
       else
@@ -319,6 +369,10 @@ export function useStorage<T extends (string | number | boolean | object | null)
     }
   }
 
+  /**
+   * 从自定义事件更新数据
+   * @param event 自定义存储事件
+   */
   function updateFromCustomEvent(event: CustomEvent<StorageEventLike>) {
     update(event.detail)
   }

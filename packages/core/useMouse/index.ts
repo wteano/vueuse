@@ -6,52 +6,78 @@ import { shallowRef } from 'vue'
 import { defaultWindow } from '../_configurable'
 import { useEventListener } from '../useEventListener'
 
+/**
+ * 鼠标坐标类型
+ * - 'page': 相对于整个文档的坐标
+ * - 'client': 相对于可视区域的坐标
+ * - 'screen': 相对于屏幕的坐标
+ * - 'movement': 相对于上次移动事件的坐标
+ */
 export type UseMouseCoordType = 'page' | 'client' | 'screen' | 'movement'
+
+/**
+ * 输入源类型
+ * - 'mouse': 鼠标输入
+ * - 'touch': 触摸输入
+ * - null: 无输入
+ */
 export type UseMouseSourceType = 'mouse' | 'touch' | null
+
+/**
+ * 鼠标事件提取器函数类型
+ * @param event - 鼠标事件或触摸事件
+ * @returns 返回[x, y]坐标数组，或返回null/undefined
+ */
 export type UseMouseEventExtractor = (event: MouseEvent | Touch) => [x: number, y: number] | null | undefined
 
+/**
+ * useMouse函数的配置选项
+ */
 export interface UseMouseOptions extends ConfigurableWindow, ConfigurableEventFilter {
   /**
-   * Mouse position based by page, client, screen, or relative to previous position
+   * 鼠标位置基于页面、客户端、屏幕或相对于之前位置
    *
    * @default 'page'
    */
   type?: UseMouseCoordType | UseMouseEventExtractor
 
   /**
-   * Listen events on `target` element
+   * 在目标元素上监听事件
    *
    * @default 'Window'
    */
   target?: MaybeRefOrGetter<Window | EventTarget | null | undefined>
 
   /**
-   * Listen to `touchmove` events
+   * 监听触摸移动事件
    *
    * @default true
    */
   touch?: boolean
 
   /**
-   * Listen to `scroll` events on window, only effective on type `page`
+   * 在窗口上监听滚动事件，仅在type为'page'时有效
    *
    * @default true
    */
   scroll?: boolean
 
   /**
-   * Reset to initial value when `touchend` event fired
+   * 当触发touchend事件时重置为初始值
    *
    * @default false
    */
   resetOnTouchEnds?: boolean
 
   /**
-   * Initial values
+   * 初始值
    */
   initialValue?: Position
 }
 
+/**
+ * 内置的鼠标事件提取器
+ */
 const UseMouseBuiltinExtractors: Record<UseMouseCoordType, UseMouseEventExtractor> = {
   page: event => [event.pageX, event.pageY],
   client: event => [event.clientX, event.clientY],
@@ -63,10 +89,11 @@ const UseMouseBuiltinExtractors: Record<UseMouseCoordType, UseMouseEventExtracto
 } as const
 
 /**
- * Reactive mouse position.
+ * 响应式鼠标位置
  *
  * @see https://vueuse.org/useMouse
- * @param options
+ * @param options - 配置选项
+ * @returns 返回包含x、y坐标和输入源类型的对象
  */
 export function useMouse(options: UseMouseOptions = {}) {
   const {
@@ -80,18 +107,24 @@ export function useMouse(options: UseMouseOptions = {}) {
     eventFilter,
   } = options
 
+  // 保存上一次的鼠标事件和滚动位置
   let _prevMouseEvent: MouseEvent | null = null
   let _prevScrollX = 0
   let _prevScrollY = 0
 
+  // 创建响应式引用
   const x = shallowRef(initialValue.x)
   const y = shallowRef(initialValue.y)
   const sourceType = shallowRef<UseMouseSourceType>(null)
 
+  // 获取坐标提取器
   const extractor = typeof type === 'function'
     ? type
     : UseMouseBuiltinExtractors[type]
 
+  /**
+   * 鼠标事件处理函数
+   */
   const mouseHandler = (event: MouseEvent) => {
     const result = extractor(event)
     _prevMouseEvent = event
@@ -107,6 +140,9 @@ export function useMouse(options: UseMouseOptions = {}) {
     }
   }
 
+  /**
+   * 触摸事件处理函数
+   */
   const touchHandler = (event: TouchEvent) => {
     if (event.touches.length > 0) {
       const result = extractor(event.touches[0])
@@ -117,6 +153,9 @@ export function useMouse(options: UseMouseOptions = {}) {
     }
   }
 
+  /**
+   * 滚动事件处理函数
+   */
   const scrollHandler = () => {
     if (!_prevMouseEvent || !window)
       return
@@ -128,11 +167,15 @@ export function useMouse(options: UseMouseOptions = {}) {
     }
   }
 
+  /**
+   * 重置坐标为初始值
+   */
   const reset = () => {
     x.value = initialValue.x
     y.value = initialValue.y
   }
 
+  // 包装事件处理函数以支持事件过滤器
   const mouseHandlerWrapper = eventFilter
     ? (event: MouseEvent) => eventFilter(() => mouseHandler(event), {} as any)
     : (event: MouseEvent) => mouseHandler(event)
@@ -145,6 +188,7 @@ export function useMouse(options: UseMouseOptions = {}) {
     ? () => eventFilter(() => scrollHandler(), {} as any)
     : () => scrollHandler()
 
+  // 添加事件监听器
   if (target) {
     const listenerOptions = { passive: true }
     useEventListener(target, ['mousemove', 'dragover'], mouseHandlerWrapper, listenerOptions)
@@ -164,4 +208,7 @@ export function useMouse(options: UseMouseOptions = {}) {
   }
 }
 
+/**
+ * useMouse函数的返回类型
+ */
 export type UseMouseReturn = ReturnType<typeof useMouse>

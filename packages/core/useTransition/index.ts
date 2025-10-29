@@ -1,3 +1,11 @@
+/*
+ * @Author: wteano wzgtao@foxmail.com
+ * @Date: 2025-10-29 09:19:17
+ * @LastEditors: wteano wzgtao@foxmail.com
+ * @LastEditTime: 2025-10-29 14:12:50
+ * @FilePath: \vueuse\packages\core\useTransition\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import type { ComputedRef, MaybeRef, MaybeRefOrGetter, Ref } from 'vue'
 import type { ConfigurableWindow } from '../_configurable'
 import { identity as linear, promiseTimeout, tryOnScopeDispose } from '@vueuse/shared'
@@ -5,70 +13,70 @@ import { computed, shallowRef, toValue, watch } from 'vue'
 import { defaultWindow } from '../_configurable'
 
 /**
- * Cubic bezier points
+ * 三次贝塞尔点
  */
 export type CubicBezierPoints = [number, number, number, number]
 
 /**
- * Easing function
+ * 缓动函数
  */
 export type EasingFunction = (n: number) => number
 
 /**
- * Interpolation function
+ * 插值函数
  */
 export type InterpolationFunction<T> = (from: T, to: T, t: number) => T
 
 /**
- * Transition options
+ * 过渡选项
  */
 export interface TransitionOptions<T> extends ConfigurableWindow {
 
   /**
-   * Manually abort a transition
+   * 手动中止过渡
    */
   abort?: () => any
 
   /**
-   * Transition duration in milliseconds
+   * 过渡持续时间（毫秒）
    */
   duration?: MaybeRef<number>
 
   /**
-   * Easing function or cubic bezier points to calculate transition progress
+   * 用于计算过渡进度的缓动函数或三次贝塞尔点
    */
   easing?: MaybeRef<EasingFunction | CubicBezierPoints>
 
   /**
-   * Custom interpolation function
+   * 自定义插值函数
    */
   interpolation?: InterpolationFunction<T>
 
   /**
-   * Easing function or cubic bezier points to calculate transition progress
-   * @deprecated The `transition` option is deprecated, use `easing` instead.
+   * 用于计算过渡进度的缓动函数或三次贝塞尔点
+   * @deprecated `transition`选项已弃用，请使用`easing`代替。
    */
   transition?: MaybeRef<EasingFunction | CubicBezierPoints>
 }
 
 export interface UseTransitionOptions<T> extends TransitionOptions<T> {
   /**
-   * Milliseconds to wait before starting transition
+   * 开始过渡前等待的毫秒数
    */
   delay?: MaybeRef<number>
 
   /**
-   * Disables the transition
+   * 禁用过渡
    */
   disabled?: MaybeRef<boolean>
 
   /**
-   * Callback to execute after transition finishes
+   * 过渡完成后执行的回调
    */
   onFinished?: () => void
 
   /**
-   * Callback to execute after transition starts
+   * 过渡开始后执行的回调
    */
   onStarted?: () => void
 }
@@ -101,14 +109,14 @@ const _TransitionPresets = {
 } as const
 
 /**
- * Common transitions
+ * 常用过渡效果
  *
  * @see https://easings.net
  */
 export const TransitionPresets = /* #__PURE__ */ Object.assign({}, { linear }, _TransitionPresets) as Record<keyof typeof _TransitionPresets, CubicBezierPoints> & { linear: EasingFunction }
 
 /**
- * Create an easing function from cubic bezier points.
+ * 从三次贝塞尔点创建缓动函数
  */
 function createEasingFunction([p0, p1, p2, p3]: CubicBezierPoints): EasingFunction {
   const a = (a1: number, a2: number) => 1 - 3 * a2 + 3 * a1
@@ -162,12 +170,12 @@ function normalizeEasing(easing: MaybeRef<EasingFunction | CubicBezierPoints> | 
 }
 
 /**
- * Transition from one value to another.
+ * 从一个值过渡到另一个值
  *
- * @param source
- * @param from
- * @param to
- * @param options
+ * @param source 源值
+ * @param from 起始值
+ * @param to 目标值
+ * @param options 过渡选项
  */
 export function transition<T>(
   source: Ref<T>,

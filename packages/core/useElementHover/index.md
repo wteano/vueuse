@@ -1,12 +1,20 @@
+<!--
+ * @Author: wteano wzgtao@foxmail.com
+ * @Date: 2025-10-29 09:19:17
+ * @LastEditors: wteano wzgtao@foxmail.com
+ * @LastEditTime: 2025-10-29 11:42:30
+ * @FilePath: \vueuse\packages\core\useElementHover\index.md
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 ---
-category: Sensors
+category: 传感器
 ---
 
 # useElementHover
 
-Reactive element's hover state.
+响应式元素的悬停状态。
 
-## Usage
+## 用法
 
 ```vue
 <script setup lang="ts">
@@ -24,7 +32,7 @@ const isHovered = useElementHover(myHoverableElement)
 </template>
 ```
 
-## Directive Usage
+## 指令用法
 
 ```vue
 <script setup lang="ts">
@@ -44,7 +52,7 @@ function onHover(state: boolean) {
 </template>
 ```
 
-You can also provide hover options:
+您也可以提供悬停选项：
 
 ```vue
 <script setup lang="ts">

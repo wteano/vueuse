@@ -4,9 +4,9 @@ category: Sensors
 
 # useFps
 
-Reactive FPS (frames per second).
+响应式FPS（每秒帧数）。
 
-## Usage
+## 用法
 
 ```ts
 import { useFps } from '@vueuse/core'

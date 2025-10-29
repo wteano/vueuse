@@ -4,11 +4,12 @@ category: Array
 
 # useArrayJoin
 
+响应式 `Array.join`
 Reactive `Array.join`
 
-## Usage
+## 用法
 
-### Use with array of multiple refs
+### 与多个 ref 组成的数组一起使用
 
 ```ts
 import { useArrayJoin } from '@vueuse/core'
@@ -23,7 +24,7 @@ item1.value = 'bar'
 // result.value: bar,0,[object Object]
 ```
 
-### Use with reactive array
+### 与响应式数组一起使用
 
 ```ts
 import { useArrayJoin } from '@vueuse/core'
@@ -37,7 +38,7 @@ list.value = [null, 'string', undefined]
 // result.value: ,string,
 ```
 
-### Use with reactive separator
+### 与响应式分隔符一起使用
 
 ```ts
 import { useArrayJoin } from '@vueuse/core'
@@ -50,4 +51,10 @@ separator.value = ''
 // result.value: string0[object Object]
 separator.value = '--'
 // result.value: string--0--[object Object]
+```
+
+## 类型声明
+
+```ts
+export type UseArrayJoinReturn = ComputedRef<string>
 ```

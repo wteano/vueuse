@@ -4,9 +4,9 @@ category: Browser
 
 # useFileSystemAccess
 
-Create and read and write local files with [FileSystemAccessAPI](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API)
+使用[FileSystemAccessAPI](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API)创建和读写本地文件
 
-## Usage
+## 用法
 
 ```ts
 import { useFileSystemAccess } from '@vueuse/core'

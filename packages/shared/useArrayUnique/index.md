@@ -4,11 +4,12 @@ category: Array
 
 # useArrayUnique
 
+响应式去重数组
 reactive unique array
 
-## Usage
+## 用法
 
-### Use with array of multiple refs
+### 与多个 ref 组成的数组一起使用
 
 ```ts
 import { useArrayUnique } from '@vueuse/core'
@@ -25,7 +26,7 @@ item5.value = 1
 // result.value: [0, 1, 2]
 ```
 
-### Use with reactive array
+### 与响应式数组一起使用
 
 ```ts
 import { useArrayUnique } from '@vueuse/core'
@@ -38,7 +39,7 @@ list.push(1)
 // result.value: [1, 2, 3]
 ```
 
-### Use with custom function
+### 使用自定义函数
 
 ```ts
 import { useArrayUnique } from '@vueuse/core'
@@ -54,4 +55,15 @@ const result = useArrayUnique(list, (a, b) => a.id === b.id)
 
 list.push({ id: 1, name: 'qux' })
 // result.value: [{ id: 1, name: 'foo' }, { id: 2, name: 'bar' }]
+```
+
+## 类型声明
+
+```ts
+export type UseArrayUniqueReturn<T = any> = ComputedRef<T[]>
+
+export function useArrayUnique<T>(
+  list: MaybeRefOrGetter<MaybeRefOrGetter<T>[]>,
+  compareFn?: (a: T, b: T, array: T[]) => boolean,
+): UseArrayUniqueReturn<T>
 ```

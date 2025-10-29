@@ -4,74 +4,77 @@ import { containsProp, createEventHook, toRef, until, useTimeoutFn } from '@vueu
 import { computed, isRef, readonly, shallowRef, toValue, watch } from 'vue'
 import { defaultWindow } from '../_configurable'
 
+/**
+ * useFetch函数的返回类型
+ */
 export interface UseFetchReturn<T> {
   /**
-   * Indicates if the fetch request has finished
+   * 指示fetch请求是否已完成
    */
   isFinished: Readonly<ShallowRef<boolean>>
 
   /**
-   * The statusCode of the HTTP fetch response
+   * HTTP fetch响应的状态码
    */
   statusCode: ShallowRef<number | null>
 
   /**
-   * The raw response of the fetch response
+   * fetch响应的原始响应
    */
   response: ShallowRef<Response | null>
 
   /**
-   * Any fetch errors that may have occurred
+   * 可能发生的任何fetch错误
    */
   error: ShallowRef<any>
 
   /**
-   * The fetch response body on success, may either be JSON or text
+   * 成功时的fetch响应体，可能是JSON或文本
    */
   data: ShallowRef<T | null>
 
   /**
-   * Indicates if the request is currently being fetched.
+   * 指示请求当前是否正在获取中
    */
   isFetching: Readonly<ShallowRef<boolean>>
 
   /**
-   * Indicates if the fetch request is able to be aborted
+   * 指示fetch请求是否可以被中止
    */
   canAbort: ComputedRef<boolean>
 
   /**
-   * Indicates if the fetch request was aborted
+   * 指示fetch请求是否已被中止
    */
   aborted: ShallowRef<boolean>
 
   /**
-   * Abort the fetch request
+   * 中止fetch请求
    */
   abort: (reason?: any) => void
 
   /**
-   * Manually call the fetch
-   * (default not throwing error)
+   * 手动调用fetch
+   * (默认不抛出错误)
    */
   execute: (throwOnFailed?: boolean) => Promise<any>
 
   /**
-   * Fires after the fetch request has finished
+   * 在fetch请求完成后触发
    */
   onFetchResponse: EventHookOn<Response>
 
   /**
-   * Fires after a fetch request error
+   * 在fetch请求错误后触发
    */
   onFetchError: EventHookOn
 
   /**
-   * Fires after a fetch has completed
+   * 在fetch完成后触发
    */
   onFetchFinally: EventHookOn
 
-  // methods
+  // HTTP方法
   get: () => UseFetchReturn<T> & PromiseLike<UseFetchReturn<T>>
   post: (payload?: MaybeRefOrGetter<unknown>, type?: string) => UseFetchReturn<T> & PromiseLike<UseFetchReturn<T>>
   put: (payload?: MaybeRefOrGetter<unknown>, type?: string) => UseFetchReturn<T> & PromiseLike<UseFetchReturn<T>>
@@ -80,7 +83,7 @@ export interface UseFetchReturn<T> {
   head: (payload?: MaybeRefOrGetter<unknown>, type?: string) => UseFetchReturn<T> & PromiseLike<UseFetchReturn<T>>
   options: (payload?: MaybeRefOrGetter<unknown>, type?: string) => UseFetchReturn<T> & PromiseLike<UseFetchReturn<T>>
 
-  // type
+  // 响应类型
   json: <JSON = any>() => UseFetchReturn<JSON> & PromiseLike<UseFetchReturn<JSON>>
   text: () => UseFetchReturn<string> & PromiseLike<UseFetchReturn<string>>
   blob: () => UseFetchReturn<Blob> & PromiseLike<UseFetchReturn<Blob>>
@@ -88,32 +91,52 @@ export interface UseFetchReturn<T> {
   formData: () => UseFetchReturn<FormData> & PromiseLike<UseFetchReturn<FormData>>
 }
 
+/**
+ * 数据类型枚举
+ */
 type DataType = 'text' | 'json' | 'blob' | 'arrayBuffer' | 'formData'
+
+/**
+ * HTTP方法枚举
+ */
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS'
+
+/**
+ * 组合方式枚举
+ */
 type Combination = 'overwrite' | 'chain'
 
+/**
+ * 负载映射表
+ */
 const payloadMapping: Record<string, string> = {
   json: 'application/json',
   text: 'text/plain',
 }
 
+/**
+ * 请求前的上下文
+ */
 export interface BeforeFetchContext {
   /**
-   * The computed url of the current request
+   * 当前请求的计算URL
    */
   url: string
 
   /**
-   * The request options of the current request
+   * 当前请求的请求选项
    */
   options: RequestInit
 
   /**
-   * Cancels the current request
+   * 取消当前请求
    */
   cancel: Fn
 }
 
+/**
+ * 请求后的上下文
+ */
 export interface AfterFetchContext<T = any> {
   response: Response
 
@@ -124,6 +147,9 @@ export interface AfterFetchContext<T = any> {
   execute: (throwOnFailed?: boolean) => Promise<any>
 }
 
+/**
+ * 请求错误的上下文
+ */
 export interface OnFetchErrorContext<T = any, E = any> {
   error: E
 
@@ -136,103 +162,109 @@ export interface OnFetchErrorContext<T = any, E = any> {
   execute: (throwOnFailed?: boolean) => Promise<any>
 }
 
+/**
+ * useFetch的配置选项
+ */
 export interface UseFetchOptions {
   /**
-   * Fetch function
+   * Fetch函数
    */
   fetch?: typeof window.fetch
 
   /**
-   * Will automatically run fetch when `useFetch` is used
+   * 使用useFetch时是否自动运行fetch
    *
    * @default true
    */
   immediate?: boolean
 
   /**
-   * Will automatically refetch when:
-   * - the URL is changed if the URL is a ref
-   * - the payload is changed if the payload is a ref
+   * 是否在以下情况下自动重新获取：
+   * - 如果URL是ref，当URL改变时
+   * - 如果payload是ref，当payload改变时
    *
    * @default false
    */
   refetch?: MaybeRefOrGetter<boolean>
 
   /**
-   * Initial data before the request finished
+   * 请求完成前的初始数据
    *
    * @default null
    */
   initialData?: any
 
   /**
-   * Timeout for abort request after number of millisecond
-   * `0` means use browser default
+   * 在指定毫秒数后中止请求的超时时间
+   * `0`表示使用浏览器默认值
    *
    * @default 0
    */
   timeout?: number
 
   /**
-   * Allow update the `data` ref when fetch error whenever provided, or mutated in the `onFetchError` callback
+   * 允许在fetch错误时或在onFetchError回调中修改时更新data引用
    *
    * @default false
    */
   updateDataOnError?: boolean
 
   /**
-   * Will run immediately before the fetch request is dispatched
+   * 将在fetch请求发送前立即运行
    */
   beforeFetch?: (ctx: BeforeFetchContext) => Promise<Partial<BeforeFetchContext> | void> | Partial<BeforeFetchContext> | void
 
   /**
-   * Will run immediately after the fetch request is returned.
-   * Runs after any 2xx response
+   * 将在fetch请求返回后立即运行
+   * 在任何2xx响应后运行
    */
   afterFetch?: (ctx: AfterFetchContext) => Promise<Partial<AfterFetchContext>> | Partial<AfterFetchContext>
 
   /**
-   * Will run immediately after the fetch request is returned.
-   * Runs after any 4xx and 5xx response
+   * 将在fetch请求返回后立即运行
+   * 在任何4xx和5xx响应后运行
    */
   onFetchError?: (ctx: OnFetchErrorContext) => Promise<Partial<OnFetchErrorContext>> | Partial<OnFetchErrorContext>
 }
 
+/**
+ * 创建Fetch的配置选项
+ */
 export interface CreateFetchOptions {
   /**
-   * The base URL that will be prefixed to all urls unless urls are absolute
+   * 将作为前缀添加到所有URL的基础URL，除非URL是绝对路径
    */
   baseUrl?: MaybeRefOrGetter<string>
 
   /**
-   * Determine the inherit behavior for beforeFetch, afterFetch, onFetchError
+   * 确定beforeFetch、afterFetch、onFetchError的继承行为
    * @default 'chain'
    */
   combination?: Combination
 
   /**
-   * Default Options for the useFetch function
+   * useFetch函数的默认选项
    */
   options?: UseFetchOptions
 
   /**
-   * Options for the fetch request
+   * fetch请求的选项
    */
   fetchOptions?: RequestInit
 }
 
 /**
- * !!!IMPORTANT!!!
+ * !!!重要!!!
  *
- * If you update the UseFetchOptions interface, be sure to update this object
- * to include the new options
+ * 如果你更新了UseFetchOptions接口，请确保更新此对象
+ * 以包含新的选项
  */
 function isFetchOptions(obj: object): obj is UseFetchOptions {
   return obj && containsProp(obj, 'immediate', 'refetch', 'initialData', 'timeout', 'beforeFetch', 'afterFetch', 'onFetchError', 'fetch', 'updateDataOnError')
 }
 
 const reAbsolute = /^(?:[a-z][a-z\d+\-.]*:)?\/\//i
-// A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
+// 如果URL以"<scheme>://"或"//"（协议相对URL）开头，则视为绝对URL。
 function isAbsoluteURL(url: string) {
   return reAbsolute.test(url)
 }
@@ -245,7 +277,7 @@ function headersToObject(headers: HeadersInit | undefined) {
 
 function combineCallbacks<T = any>(combination: Combination, ...callbacks: (((ctx: T) => void | Partial<T> | Promise<void | Partial<T>>) | undefined)[]) {
   if (combination === 'overwrite') {
-    // use last callback
+    // 使用最后一个回调
     return async (ctx: T) => {
       let callback
       for (let i = callbacks.length - 1; i >= 0; i--) {
@@ -261,7 +293,7 @@ function combineCallbacks<T = any>(combination: Combination, ...callbacks: (((ct
     }
   }
   else {
-    // chaining and combine result
+    // 链式调用并组合结果
     return async (ctx: T) => {
       for (const callback of callbacks) {
         if (callback)
@@ -273,6 +305,11 @@ function combineCallbacks<T = any>(combination: Combination, ...callbacks: (((ct
   }
 }
 
+/**
+ * 创建一个带有预配置选项的fetch函数
+ * @param config 配置选项
+ * @returns 预配置的fetch函数
+ */
 export function createFetch(config: CreateFetchOptions = {}) {
   const _combination = config.combination || 'chain' as Combination
   const _options = config.options || {}
@@ -291,7 +328,7 @@ export function createFetch(config: CreateFetchOptions = {}) {
     let options = _options
     let fetchOptions = _fetchOptions
 
-    // Merge properties into a single object
+    // 将属性合并到单个对象中
     if (args.length > 0) {
       if (isFetchOptions(args[0])) {
         options = {
@@ -330,6 +367,11 @@ export function createFetch(config: CreateFetchOptions = {}) {
   return useFactoryFetch as typeof useFetch
 }
 
+/**
+ * 响应式fetch API
+ * @param url 请求的URL
+ * @returns 包含fetch状态和方法的响应式对象
+ */
 export function useFetch<T>(url: MaybeRefOrGetter<string>): UseFetchReturn<T> & PromiseLike<UseFetchReturn<T>>
 export function useFetch<T>(url: MaybeRefOrGetter<string>, useFetchOptions: UseFetchOptions): UseFetchReturn<T> & PromiseLike<UseFetchReturn<T>>
 export function useFetch<T>(url: MaybeRefOrGetter<string>, options: RequestInit, useFetchOptions?: UseFetchOptions): UseFetchReturn<T> & PromiseLike<UseFetchReturn<T>>
@@ -376,7 +418,7 @@ export function useFetch<T>(url: MaybeRefOrGetter<string>, ...args: any[]): UseF
     timeout,
   } = options
 
-  // Event Hooks
+  // 事件钩子
   const responseEvent = createEventHook<Response>()
   const errorEvent = createEventHook<any>()
   const finallyEvent = createEventHook<any>()
@@ -394,6 +436,10 @@ export function useFetch<T>(url: MaybeRefOrGetter<string>, ...args: any[]): UseF
   let controller: AbortController | undefined
   let timer: Stoppable | undefined
 
+  /**
+   * 中止请求
+   * @param reason 中止原因
+   */
   const abort = (reason?: any) => {
     if (supportsAbort) {
       controller?.abort(reason)
@@ -406,6 +452,10 @@ export function useFetch<T>(url: MaybeRefOrGetter<string>, ...args: any[]): UseF
     }
   }
 
+  /**
+   * 设置加载状态
+   * @param isLoading 是否正在加载
+   */
   const loading = (isLoading: boolean) => {
     isFetching.value = isLoading
     isFinished.value = !isLoading
@@ -416,6 +466,11 @@ export function useFetch<T>(url: MaybeRefOrGetter<string>, ...args: any[]): UseF
 
   let executeCounter = 0
 
+  /**
+   * 执行fetch请求
+   * @param throwOnFailed 失败时是否抛出错误
+   * @returns Promise对象
+   */
   const execute = async (throwOnFailed = false) => {
     abort()
 
@@ -435,8 +490,8 @@ export function useFetch<T>(url: MaybeRefOrGetter<string>, ...args: any[]): UseF
     const payload = toValue(config.payload)
     if (payload) {
       const headers = headersToObject(defaultFetchOptions.headers) as Record<string, string>
-      // Set the payload to json type only if it's not provided and a literal object or array is provided and the object is not `formData`
-      // The only case we can deduce the content type and `fetch` can't
+      // 仅在未提供内容类型且提供了字面量对象或数组且对象不是`formData`时，将负载设置为json类型
+      // 我们可以推断内容类型的唯一情况，而`fetch`不能
       const proto = Object.getPrototypeOf(payload)
       if (!config.payloadType && payload && (proto === Object.prototype || Array.isArray(proto)) && !(payload instanceof FormData))
         config.payloadType = 'json'
@@ -489,7 +544,7 @@ export function useFetch<T>(url: MaybeRefOrGetter<string>, ...args: any[]): UseF
 
         responseData = await fetchResponse.clone()[config.type]()
 
-        // see: https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
+        // 参考: https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
         if (!fetchResponse.ok) {
           data.value = initialData || null
           throw new Error(fetchResponse.statusText)
@@ -580,6 +635,11 @@ export function useFetch<T>(url: MaybeRefOrGetter<string>, ...args: any[]): UseF
     formData: setType('formData'),
   }
 
+  /**
+   * 设置HTTP方法
+   * @param method HTTP方法
+   * @returns 设置了方法的fetch对象
+   */
   function setMethod(method: HttpMethod) {
     return (payload?: unknown, payloadType?: string) => {
       if (!isFetching.value) {
@@ -587,7 +647,7 @@ export function useFetch<T>(url: MaybeRefOrGetter<string>, ...args: any[]): UseF
         config.payload = payload
         config.payloadType = payloadType
 
-        // watch for payload changes
+        // 监听负载变化
         if (isRef(config.payload)) {
           watch(
             [
@@ -611,12 +671,21 @@ export function useFetch<T>(url: MaybeRefOrGetter<string>, ...args: any[]): UseF
     }
   }
 
+  /**
+   * 等待请求完成
+   * @returns Promise对象
+   */
   function waitUntilFinished() {
     return new Promise<UseFetchReturn<T>>((resolve, reject) => {
       until(isFinished).toBe(true).then(() => resolve(shell)).catch(reject)
     })
   }
 
+  /**
+   * 设置响应数据类型
+   * @param type 数据类型
+   * @returns 设置了类型的fetch对象
+   */
   function setType(type: DataType) {
     return () => {
       if (!isFetching.value) {
@@ -645,6 +714,12 @@ export function useFetch<T>(url: MaybeRefOrGetter<string>, ...args: any[]): UseF
   }
 }
 
+/**
+ * 连接路径
+ * @param start 起始路径
+ * @param end 结束路径
+ * @returns 连接后的路径
+ */
 function joinPaths(start: string, end: string): string {
   if (!start.endsWith('/') && !end.startsWith('/')) {
     return `${start}/${end}`

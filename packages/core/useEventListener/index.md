@@ -1,12 +1,12 @@
 ---
-category: Browser
+category: 浏览器
 ---
 
 # useEventListener
 
-Use EventListener with ease. Register using [addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) on mounted, and [removeEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener) automatically on unmounted.
+轻松使用EventListener。在挂载时使用[addEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)注册事件，在卸载时自动使用[removeEventListener](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener)移除。
 
-## Usage
+## 用法
 
 ```ts
 import { useEventListener } from '@vueuse/core'
@@ -16,7 +16,7 @@ useEventListener(document, 'visibilitychange', (evt) => {
 })
 ```
 
-You can also pass a ref as the event target, `useEventListener` will unregister the previous event and register the new one when you change the target.
+您还可以传递一个ref作为事件目标，当您更改目标时，`useEventListener`将取消注册前一个事件并注册新事件。
 
 ```vue
 <script setup lang="ts">
@@ -39,7 +39,7 @@ useEventListener(element, 'keydown', (e) => {
 </template>
 ```
 
-You can also call the returned to unregister the listener.
+您还可以调用返回的函数来取消注册监听器。
 
 ```ts
 import { useEventListener } from '@vueuse/core'
@@ -48,16 +48,16 @@ const cleanup = useEventListener(document, 'keydown', (e) => {
   console.log(e.key)
 })
 
-cleanup() // This will unregister the listener.
+cleanup() // 这将取消注册监听器。
 ```
 
-Note if your components also run in SSR (Server Side Rendering), you might get errors (like `document is not defined`) because DOM APIs like `document` and `window` are not available in Node.js. To avoid that you can put the logic inside `onMounted` hook.
+注意，如果您的组件也在SSR（服务器端渲染）中运行，您可能会遇到错误（如`document is not defined`），因为像`document`和`window`这样的DOM API在Node.js中不可用。为避免这种情况，您可以将逻辑放在`onMounted`钩子内。
 
 ```ts
 import { useEventListener } from '@vueuse/core'
 // ---cut---
-// onMounted will only be called in the client side
-// so it guarantees the DOM APIs are available.
+// onMounted只会在客户端调用
+// 因此它保证DOM API可用。
 onMounted(() => {
   useEventListener(document, 'keydown', (e) => {
     console.log(e.key)

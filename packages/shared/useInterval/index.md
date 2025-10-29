@@ -4,14 +4,14 @@ category: Animation
 
 # useInterval
 
-Reactive counter increases on every interval
+每个间隔递增的响应式计数器
 
-## Usage
+## 用法
 
 ```ts
 import { useInterval } from '@vueuse/core'
 
-// count will increase every 200ms
+// 计数器每200ms递增一次
 const counter = useInterval(200)
 ```
 

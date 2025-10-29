@@ -10,7 +10,7 @@ const DEFAULT_THRESHOLD = 10
 
 export interface OnLongPressOptions {
   /**
-   * Time in ms till `longpress` gets called
+   * 调用`longpress`的时间（毫秒）
    *
    * @default 500
    */
@@ -19,17 +19,17 @@ export interface OnLongPressOptions {
   modifiers?: OnLongPressModifiers
 
   /**
-   * Allowance of moving distance in pixels,
-   * The action will get canceled When moving too far from the pointerdown position.
+   * 允许移动的距离（像素），
+   * 当移动距离离指针按下位置太远时，操作将被取消。
    * @default 10
    */
   distanceThreshold?: number | false
 
   /**
-   * Function called when the ref element is released.
-   * @param duration how long the element was pressed in ms
-   * @param distance distance from the pointerdown position
-   * @param isLongPress whether the action was a long press or not
+   * 当释放ref元素时调用的函数。
+   * @param duration 元素被按下的时间（毫秒）
+   * @param distance 离指针按下位置的距离
+   * @param isLongPress 操作是否是长按
    */
   onMouseUp?: (duration: number, distance: number, isLongPress: boolean) => void
 }

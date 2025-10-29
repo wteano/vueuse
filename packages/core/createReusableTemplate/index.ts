@@ -2,12 +2,21 @@ import type { ComponentObjectPropsOptions, DefineComponent, Slot } from 'vue'
 import { camelize, makeDestructurable } from '@vueuse/shared'
 import { defineComponent, shallowRef } from 'vue'
 
+/**
+ * 具有潜在对象字面量的对象字面量类型
+ */
 type ObjectLiteralWithPotentialObjectLiterals = Record<string, Record<string, any> | undefined>
 
+/**
+ * 从插槽映射生成插槽类型
+ */
 type GenerateSlotsFromSlotMap<T extends ObjectLiteralWithPotentialObjectLiterals> = {
   [K in keyof T]: Slot<T[K]>
 }
 
+/**
+ * 定义模板组件类型
+ */
 export type DefineTemplateComponent<
   Bindings extends Record<string, any>,
   MapSlotNameToSlotProps extends ObjectLiteralWithPotentialObjectLiterals,
@@ -15,6 +24,9 @@ export type DefineTemplateComponent<
   new(): { $slots: { default: (_: Bindings & { $slots: GenerateSlotsFromSlotMap<MapSlotNameToSlotProps> }) => any } }
 }
 
+/**
+ * 重用模板组件类型
+ */
 export type ReuseTemplateComponent<
   Bindings extends Record<string, any>,
   MapSlotNameToSlotProps extends ObjectLiteralWithPotentialObjectLiterals,
@@ -22,6 +34,9 @@ export type ReuseTemplateComponent<
   new(): { $slots: GenerateSlotsFromSlotMap<MapSlotNameToSlotProps> }
 }
 
+/**
+ * 可重用模板对类型
+ */
 export type ReusableTemplatePair<
   Bindings extends Record<string, any>,
   MapSlotNameToSlotProps extends ObjectLiteralWithPotentialObjectLiterals,
@@ -33,22 +48,25 @@ export type ReusableTemplatePair<
   reuse: ReuseTemplateComponent<Bindings, MapSlotNameToSlotProps>
 }
 
+/**
+ * 创建可重用模板选项
+ */
 export interface CreateReusableTemplateOptions<Props extends Record<string, any>> {
   /**
-   * Inherit attrs from reuse component.
+   * 是否从重用组件继承属性
    *
    * @default true
    */
   inheritAttrs?: boolean
   /**
-   * Props definition for reuse component.
+   * 重用组件的属性定义
    */
   props?: ComponentObjectPropsOptions<Props>
 }
 
 /**
- * This function creates `define` and `reuse` components in pair,
- * It also allow to pass a generic to bind with type.
+ * 此函数成对创建`define`和`reuse`组件，
+ * 它还允许传递泛型以进行类型绑定。
  *
  * @see https://vueuse.org/createReusableTemplate
  *
@@ -99,6 +117,9 @@ export function createReusableTemplate<
   ) as ReusableTemplatePair<Bindings, MapSlotNameToSlotProps>
 }
 
+/**
+ * 将对象的键转换为驼峰命名或短横线命名
+ */
 function keysToCamelKebabCase(obj: Record<string, any>) {
   const newObj: typeof obj = {}
   for (const key in obj)

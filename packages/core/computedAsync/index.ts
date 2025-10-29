@@ -10,55 +10,55 @@ import {
 } from 'vue'
 
 /**
- * Handle overlapping async evaluations.
+ * 处理重叠的异步评估。
  *
- * @param cancelCallback The provided callback is invoked when a re-evaluation of the computed value is triggered before the previous one finished
+ * @param cancelCallback 当在之前的评估完成之前触发重新评估时，调用提供的回调函数
  */
 export type AsyncComputedOnCancel = (cancelCallback: Fn) => void
 
 export interface AsyncComputedOptions<Lazy = boolean> {
   /**
-   * Should value be evaluated lazily
+   * 是否应该延迟计算值
    *
    * @default false
    */
   lazy?: Lazy
 
   /**
-   * Ref passed to receive the updated of async evaluation
+   * 用于接收异步评估更新的ref
    */
   evaluating?: Ref<boolean>
 
   /**
-   * Use shallowRef
+   * 使用shallowRef
    *
    * @default true
    */
   shallow?: boolean
 
   /**
-   * The flush option allows for greater control over the timing of a history point, default to `pre`
+   * flush选项允许更好地控制历史记录点的时机，默认为`pre`
    *
-   * Possible values: `pre`, `post`, `sync`
+   * 可能的值: `pre`, `post`, `sync`
    *
-   * It works in the same way as the flush option in watch and watch effect in vue reactivity
+   * 它的工作方式与Vue响应式中的watch和watch effect的flush选项相同
    * @default 'sync'
    */
   flush?: WatchOptionFlush
 
   /**
-   * Callback when error is caught.
+   * 捕获错误时的回调函数。
    */
   onError?: (e: unknown) => void
 }
 
 /**
- * Create an asynchronous computed dependency.
+ * 创建一个异步计算的依赖关系。
  *
  * @see https://vueuse.org/computedAsync
- * @param evaluationCallback     The promise-returning callback which generates the computed value
- * @param initialState           The initial state, used until the first evaluation finishes
- * @param optionsOrRef           Additional options or a ref passed to receive the updates of the async evaluation
+ * @param evaluationCallback     返回promise的回调函数，用于生成计算值
+ * @param initialState           初始状态，在第一次评估完成之前使用
+ * @param optionsOrRef           额外选项或一个ref，用于接收异步评估的更新
  */
 export function computedAsync<T>(
   evaluationCallback: (onCancel: AsyncComputedOnCancel) => T | Promise<T>,
@@ -116,8 +116,8 @@ export function computedAsync<T>(
     const counterAtBeginning = counter
     let hasFinished = false
 
-    // Defer initial setting of `evaluating` ref
-    // to avoid having it as a dependency
+    // 延迟初始设置`evaluating` ref
+    // 以避免将其作为依赖项
     if (evaluating) {
       Promise.resolve().then(() => {
         evaluating.value = true
@@ -160,5 +160,5 @@ export function computedAsync<T>(
   }
 }
 
-/** @deprecated use `computedAsync` instead */
+/** @deprecated 使用 `computedAsync` 替代 */
 export const asyncComputed = computedAsync

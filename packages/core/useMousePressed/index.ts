@@ -8,48 +8,48 @@ import { useEventListener } from '../useEventListener'
 
 export interface MousePressedOptions extends ConfigurableWindow {
   /**
-   * Listen to `touchstart` `touchend` events
+   * 监听 `touchstart` `touchend` 事件
    *
    * @default true
    */
   touch?: boolean
 
   /**
-   * Listen to `dragstart` `drop` and `dragend` events
+   * 监听 `dragstart` `drop` 和 `dragend` 事件
    *
    * @default true
    */
   drag?: boolean
 
   /**
-   * Add event listeners with the `capture` option set to `true`
-   * (see [MDN](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#capture))
+   * 使用 `capture` 选项设置为 `true` 添加事件监听器
+   * (参见 [MDN](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#capture))
    *
    * @default false
    */
   capture?: boolean
 
   /**
-   * Initial values
+   * 初始值
    *
    * @default false
    */
   initialValue?: boolean
 
   /**
-   * Element target to be capture the click
+   * 要捕获点击的目标元素
    */
   target?: MaybeComputedElementRef
 
   /**
-   * Callback to be called when the mouse is pressed
+   * 当鼠标按下时调用的回调函数
    *
    * @param event
    */
   onPressed?: (event: MouseEvent | TouchEvent | DragEvent) => void
 
   /**
-   * Callback to be called when the mouse is released
+   * 当鼠标释放时调用的回调函数
    *
    * @param event
    */
@@ -57,10 +57,10 @@ export interface MousePressedOptions extends ConfigurableWindow {
 }
 
 /**
- * Reactive mouse pressing state.
+ * 响应式鼠标按压状态
  *
  * @see https://vueuse.org/useMousePressed
- * @param options
+ * @param options - 配置选项
  */
 export function useMousePressed(options: MousePressedOptions = {}) {
   const {

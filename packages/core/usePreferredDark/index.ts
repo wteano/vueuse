@@ -2,10 +2,10 @@ import type { ConfigurableWindow } from '../_configurable'
 import { useMediaQuery } from '../useMediaQuery'
 
 /**
- * Reactive dark theme preference.
+ * 响应式深色主题偏好
  *
  * @see https://vueuse.org/usePreferredDark
- * @param [options]
+ * @param [options] 配置选项
  *
  * @__NO_SIDE_EFFECTS__
  */

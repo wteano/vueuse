@@ -1,3 +1,11 @@
+/*
+ * @Author: wteano wzgtao@foxmail.com
+ * @Date: 2025-10-29 09:19:17
+ * @LastEditors: wteano wzgtao@foxmail.com
+ * @LastEditTime: 2025-10-29 14:10:24
+ * @FilePath: \vueuse\packages\core\useResizeObserver\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import type { MaybeRefOrGetter } from 'vue'
 import type { ConfigurableWindow } from '../_configurable'
 import type { MaybeComputedElementRef, MaybeElement } from '../unrefElement'
@@ -24,8 +32,8 @@ export type ResizeObserverCallback = (entries: ReadonlyArray<ResizeObserverEntry
 
 export interface UseResizeObserverOptions extends ConfigurableWindow {
   /**
-   * Sets which box model the observer will observe changes to. Possible values
-   * are `content-box` (the default), `border-box` and `device-pixel-content-box`.
+   * 设置观察器将观察哪个盒模型的变化。可能的值
+   * 是 `content-box`（默认）、`border-box` 和 `device-pixel-content-box`。
    *
    * @default 'content-box'
    */
@@ -40,12 +48,12 @@ declare class ResizeObserver {
 }
 
 /**
- * Reports changes to the dimensions of an Element's content or the border-box
+ * 报告元素内容或边框盒尺寸的变化
  *
  * @see https://vueuse.org/useResizeObserver
- * @param target
- * @param callback
- * @param options
+ * @param target 目标元素或元素数组
+ * @param callback 尺寸变化时的回调函数
+ * @param options 配置选项
  */
 export function useResizeObserver(
   target: MaybeComputedElementRef | MaybeComputedElementRef[] | MaybeRefOrGetter<MaybeElement[]>,

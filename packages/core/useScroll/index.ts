@@ -1,3 +1,11 @@
+/*
+ * @Author: wteano wzgtao@foxmail.com
+ * @Date: 2025-10-29 09:19:17
+ * @LastEditors: wteano wzgtao@foxmail.com
+ * @LastEditTime: 2025-10-29 11:44:19
+ * @FilePath: \vueuse\packages\core\useScroll\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import type { MaybeRefOrGetter } from 'vue'
 import type { ConfigurableWindow } from '../_configurable'
 import { noop, tryOnMounted, useDebounceFn, useThrottleFn } from '@vueuse/shared'
@@ -9,22 +17,22 @@ import { useMutationObserver } from '../useMutationObserver'
 
 export interface UseScrollOptions extends ConfigurableWindow {
   /**
-   * Throttle time for scroll event, it’s disabled by default.
+   * 滚动事件的节流时间，默认禁用
    *
    * @default 0
    */
   throttle?: number
 
   /**
-   * The check time when scrolling ends.
-   * This configuration will be setting to (throttle + idle) when the `throttle` is configured.
+   * 滚动结束时的检查时间
+   * 当配置了 `throttle` 时，此配置将被设置为 (throttle + idle)
    *
    * @default 200
    */
   idle?: number
 
   /**
-   * Offset arrived states by x pixels
+   * 通过 x 像素偏移到达状态
    *
    */
   offset?: {
@@ -35,8 +43,8 @@ export interface UseScrollOptions extends ConfigurableWindow {
   }
 
   /**
-   * Use MutationObserver to monitor specific DOM changes,
-   * such as attribute modifications, child node additions or removals, or subtree changes.
+   * 使用 MutationObserver 监控特定的 DOM 更改，
+   * 例如属性修改、子节点添加或删除，或子树更改。
    * @default { mutation: boolean }
    */
   observe?: boolean | {
@@ -44,54 +52,54 @@ export interface UseScrollOptions extends ConfigurableWindow {
   }
 
   /**
-   * Trigger it when scrolling.
+   * 滚动时触发
    *
    */
   onScroll?: (e: Event) => void
 
   /**
-   * Trigger it when scrolling ends.
+   * 滚动结束时触发
    *
    */
   onStop?: (e: Event) => void
 
   /**
-   * Listener options for scroll event.
+   * 滚动事件的监听器选项
    *
    * @default {capture: false, passive: true}
    */
   eventListenerOptions?: boolean | AddEventListenerOptions
 
   /**
-   * Optionally specify a scroll behavior of `auto` (default, not smooth scrolling) or
-   * `smooth` (for smooth scrolling) which takes effect when changing the `x` or `y` refs.
+   * 可选指定滚动行为为 `auto`（默认，非平滑滚动）或
+   * `smooth`（平滑滚动），在更改 `x` 或 `y` refs 时生效
    *
    * @default 'auto'
    */
   behavior?: MaybeRefOrGetter<ScrollBehavior>
 
   /**
-   * On error callback
+   * 错误回调
    *
-   * Default log error to `console.error`
+   * 默认将错误记录到 `console.error`
    */
   onError?: (error: unknown) => void
 }
 
 /**
- * We have to check if the scroll amount is close enough to some threshold in order to
- * more accurately calculate arrivedState. This is because scrollTop/scrollLeft are non-rounded
- * numbers, while scrollHeight/scrollWidth and clientHeight/clientWidth are rounded.
+ * 我们必须检查滚动量是否接近某个阈值，以便
+ * 更准确地计算 arrivedState。这是因为 scrollTop/scrollLeft 是非四舍五入的
+ * 数字，而 scrollHeight/scrollWidth 和 clientHeight/clientWidth 是四舍五入的。
  * https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#determine_if_an_element_has_been_totally_scrolled
  */
 const ARRIVED_STATE_THRESHOLD_PIXELS = 1
 
 /**
- * Reactive scroll.
+ * 响应式滚动
  *
  * @see https://vueuse.org/useScroll
- * @param element
- * @param options
+ * @param element - 要监听滚动的元素
+ * @param options - 配置选项
  */
 export function useScroll(
   element: MaybeRefOrGetter<HTMLElement | SVGElement | Window | Document | null | undefined>,
@@ -129,8 +137,8 @@ export function useScroll(
   const internalX = shallowRef(0)
   const internalY = shallowRef(0)
 
-  // Use a computed for x and y because we want to write the value to the refs
-  // during a `scrollTo()` without firing additional `scrollTo()`s in the process.
+  // 使用计算属性作为 x 和 y，因为我们想要在 `scrollTo()` 期间将值写入 refs
+  // 而不会在此过程中触发额外的 `scrollTo()`。
   const x = computed({
     get() {
       return internalX.value
@@ -187,7 +195,7 @@ export function useScroll(
   })
 
   const onScrollEnd = (e: Event) => {
-    // dedupe if support native scrollend event
+    // 如果支持原生 scrollend 事件，则去重
     if (!isScrolling.value)
       return
 
@@ -236,7 +244,7 @@ export function useScroll(
 
     let scrollTop = el.scrollTop
 
-    // patch for mobile compatible
+    // 移动端兼容性补丁
     if (target === window.document && !scrollTop)
       scrollTop = window.document.body.scrollTop
 
@@ -249,8 +257,8 @@ export function useScroll(
       - ARRIVED_STATE_THRESHOLD_PIXELS
 
     /**
-     * reverse columns and rows behave exactly the other way around,
-     * bottom is treated as top and top is treated as the negative version of bottom
+     * 反向列和行的行为完全相反，
+     * bottom 被视为 top，top 被视为 bottom 的负版本
      */
     if (display === 'flex' && flexDirection === 'column-reverse') {
       arrivedState.top = bottom

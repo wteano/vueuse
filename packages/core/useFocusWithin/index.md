@@ -1,12 +1,20 @@
+<!--
+ * @Author: wteano wzgtao@foxmail.com
+ * @Date: 2025-10-29 09:19:17
+ * @LastEditors: wteano wzgtao@foxmail.com
+ * @LastEditTime: 2025-10-29 11:05:07
+ * @FilePath: \vueuse\packages\core\useFocusWithin\index.md
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 ---
 category: Sensors
 ---
 
 # useFocusWithin
 
-Reactive utility to track if an element or one of its decendants has focus. It is meant to match the behavior of the `:focus-within` CSS pseudo-class. A common use case would be on a form element to see if any of its inputs currently have focus.
+响应式工具，用于跟踪元素或其任何后代元素是否获得焦点。它旨在匹配`:focus-within` CSS伪类的行为。一个常见的用例是在表单元素上查看其任何输入当前是否获得焦点。
 
-## Basic Usage
+## 基本用法
 
 ```vue
 <script setup lang="ts">
@@ -18,18 +26,18 @@ const { focused } = useFocusWithin(target)
 
 watch(focused, (focused) => {
   if (focused)
-    console.log('Target contains the focused element')
+    console.log('目标包含已获得焦点的元素')
   else
-    console.log('Target does NOT contain the focused element')
+    console.log('目标不包含已获得焦点的元素')
 })
 </script>
 
 <template>
   <form ref="target">
-    <input type="text" placeholder="First Name">
-    <input type="text" placeholder="Last Name">
-    <input type="text" placeholder="Email">
-    <input type="text" placeholder="Password">
+    <input type="text" placeholder="名字">
+    <input type="text" placeholder="姓氏">
+    <input type="text" placeholder="邮箱">
+    <input type="text" placeholder="密码">
   </form>
 </template>
 ```

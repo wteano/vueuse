@@ -9,11 +9,35 @@ import { unrefElement } from '../unrefElement'
 import { useEventListener } from '../useEventListener'
 
 export interface UseElementHoverOptions extends ConfigurableWindow {
+  /**
+   * 鼠标进入延迟时间（毫秒）
+   *
+   * @default 0
+   */
   delayEnter?: number
+  
+  /**
+   * 鼠标离开延迟时间（毫秒）
+   *
+   * @default 0
+   */
   delayLeave?: number
+  
+  /**
+   * 元素移除时是否触发
+   *
+   * @default false
+   */
   triggerOnRemoval?: boolean
 }
 
+/**
+ * 响应式元素的悬停状态
+ *
+ * @see https://vueuse.org/useElementHover
+ * @param el 目标元素
+ * @param options 配置选项
+ */
 export function useElementHover(el: MaybeRefOrGetter<EventTarget | null | undefined>, options: UseElementHoverOptions = {}): ShallowRef<boolean> {
   const {
     delayEnter = 0,

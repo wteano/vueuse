@@ -1,12 +1,12 @@
 ---
-category: Sensors
+category: 传感器
 ---
 
 # useScroll
 
-Reactive scroll position and state.
+响应式滚动位置和状态。
 
-## Usage
+## 用法
 
 ```vue
 <script setup lang="ts">
@@ -22,7 +22,7 @@ const { x, y, isScrolling, arrivedState, directions } = useScroll(el)
 </template>
 ```
 
-### With offsets
+### 带偏移量
 
 ```ts
 import { useScroll } from '@vueuse/core'
@@ -32,9 +32,9 @@ const { x, y, isScrolling, arrivedState, directions } = useScroll(el, {
 })
 ```
 
-### Setting scroll position
+### 设置滚动位置
 
-Set the `x` and `y` values to make the element scroll to that position.
+设置 `x` 和 `y` 值使元素滚动到该位置。
 
 ```vue
 <script setup lang="ts">
@@ -48,17 +48,17 @@ const { x, y } = useScroll(el)
 <template>
   <div ref="el" />
   <button @click="x += 10">
-    Scroll right 10px
+    向右滚动 10px
   </button>
   <button @click="y += 10">
-    Scroll down 10px
+    向下滚动 10px
   </button>
 </template>
 ```
 
-### Smooth scrolling
+### 平滑滚动
 
-Set `behavior: smooth` to enable smooth scrolling. The `behavior` option defaults to `auto`, which means no smooth scrolling. See the `behavior` option on [`window.scrollTo()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollTo) for more information.
+设置 `behavior: smooth` 启用平滑滚动。`behavior` 选项默认为 `auto`，表示没有平滑滚动。有关更多信息，请参阅 [`window.scrollTo()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollTo) 上的 `behavior` 选项。
 
 ```ts
 import { useScroll } from '@vueuse/core'
@@ -67,17 +67,17 @@ import { useTemplateRef } from 'vue'
 const el = useTemplateRef<HTMLElement>('el')
 const { x, y } = useScroll(el, { behavior: 'smooth' })
 
-// Or as a `ref`:
+// 或作为 `ref`：
 const smooth = ref(false)
 const behavior = computed(() => smooth.value ? 'smooth' : 'auto')
 const { x, y } = useScroll(el, { behavior })
 ```
 
-### Recalculate scroll state
+### 重新计算滚动状态
 
-You can call the `measure()` method to manually update the scroll position and `arrivedState` at any time.
+您可以随时调用 `measure()` 方法手动更新滚动位置和 `arrivedState`。
 
-This is useful, for example, after dynamic content changes or when you want to recalculate the scroll state outside of scroll events.
+例如，这在动态内容更改后或您想在滚动事件之外重新计算滚动状态时非常有用。
 
 ```ts
 import { useScroll } from '@vueuse/core'
@@ -88,14 +88,14 @@ const reactiveValue = shallowRef(false)
 
 const { measure } = useScroll(el)
 
-// In a watcher
+// 在观察者中
 watch(reactiveValue, () => {
   measure()
 })
 
-// Or inside any function
+// 或在任何函数内部
 function updateScrollState() {
-  // ...some logic
+  // ...一些逻辑
   nextTick(() => {
     measure()
   })
@@ -103,11 +103,11 @@ function updateScrollState() {
 ```
 
 > [!NOTE]
-> it's recommended to call `measure()` inside `nextTick()`, to ensure the DOM is updated first.
-> The scroll state is initialized automatically `onMount`.
-> You only need to call `measure()` manually if you want to recalculate the state after some dynamic changes.
+> 建议在 `nextTick()` 内调用 `measure()`，以确保 DOM 首先更新。
+> 滚动状态在 `onMount` 时自动初始化。
+> 如果您想在某些动态更改后重新计算状态，只需要手动调用 `measure()`。
 
-## Directive Usage
+## 指令用法
 
 ```vue
 <script setup lang="ts">
@@ -128,7 +128,7 @@ function onScroll(state: UseScrollReturn) {
     </div>
   </div>
 
-  <!-- with options -->
+  <!-- 带选项 -->
   <div v-scroll="[onScroll, { throttle: 10 }]">
     <div v-for="item in data" :key="item">
       {{ item }}

@@ -1,3 +1,11 @@
+/*
+ * @Author: wteano wzgtao@foxmail.com
+ * @Date: 2025-10-29 09:19:17
+ * @LastEditors: wteano wzgtao@foxmail.com
+ * @LastEditTime: 2025-10-29 10:39:49
+ * @FilePath: \vueuse\packages\core\useWindowSize\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import type { ConfigurableWindow } from '../_configurable'
 import { tryOnMounted } from '@vueuse/shared'
 import { shallowRef, watch } from 'vue'
@@ -9,30 +17,30 @@ export interface UseWindowSizeOptions extends ConfigurableWindow {
   initialWidth?: number
   initialHeight?: number
   /**
-   * Listen to window `orientationchange` event
+   * 监听窗口的`orientationchange`事件
    *
    * @default true
    */
   listenOrientation?: boolean
 
   /**
-   * Whether the scrollbar should be included in the width and height
-   * Only effective when `type` is `'inner'`
+   * 宽度和高度是否应包含滚动条
+   * 仅在`type`为`'inner'`时有效
    *
    * @default true
    */
   includeScrollbar?: boolean
 
   /**
-   * Use `window.innerWidth` or `window.outerWidth` or `window.visualViewport`
-   * visualViewport documentation from MDN(https://developer.mozilla.org/zh-CN/docs/Web/API/VisualViewport)
+   * 使用`window.innerWidth`、`window.outerWidth`或`window.visualViewport`
+   * visualViewport文档来自MDN(https://developer.mozilla.org/zh-CN/docs/Web/API/VisualViewport)
    * @default 'inner'
    */
   type?: 'inner' | 'outer' | 'visual'
 }
 
 /**
- * Reactive window size.
+ * 响应式的窗口大小。
  *
  * @see https://vueuse.org/useWindowSize
  * @param options
@@ -49,10 +57,10 @@ export function useWindowSize(options: UseWindowSizeOptions = {}) {
     type = 'inner',
   } = options
 
-  const width = shallowRef(initialWidth)
-  const height = shallowRef(initialHeight)
+  const width = shallowRef(initialWidth) // 窗口宽度的响应式引用
+  const height = shallowRef(initialHeight) // 窗口高度的响应式引用
 
-  const update = () => {
+  const update = () => { // 更新窗口大小的函数
     if (window) {
       if (type === 'outer') {
         width.value = window.outerWidth
@@ -92,4 +100,4 @@ export function useWindowSize(options: UseWindowSizeOptions = {}) {
   return { width, height }
 }
 
-export type UseWindowSizeReturn = ReturnType<typeof useWindowSize>
+export type UseWindowSizeReturn = ReturnType<typeof useWindowSize> // useWindowSize函数的返回类型

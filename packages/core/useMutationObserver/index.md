@@ -1,12 +1,12 @@
 ---
-category: Elements
+category: 元素
 ---
 
 # useMutationObserver
 
-Watch for changes being made to the DOM tree. [MutationObserver MDN](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver)
+监听DOM树的变化。[MutationObserver MDN](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver)
 
-## Usage
+## 用法
 
 ```vue
 <script setup lang="ts">

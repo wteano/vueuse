@@ -5,7 +5,7 @@ import { useSupported } from '../useSupported'
 
 export type UsePerformanceObserverOptions = PerformanceObserverInit & ConfigurableWindow & {
   /**
-   * Start the observer immediate.
+   * 立即启动观察器
    *
    * @default true
    */
@@ -13,10 +13,11 @@ export type UsePerformanceObserverOptions = PerformanceObserverInit & Configurab
 }
 
 /**
- * Observe performance metrics.
+ * 观察性能指标
  *
  * @see https://vueuse.org/usePerformanceObserver
- * @param options
+ * @param options 配置选项
+ * @param callback 回调函数
  */
 export function usePerformanceObserver(options: UsePerformanceObserverOptions, callback: PerformanceObserverCallback) {
   const {

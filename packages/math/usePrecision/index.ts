@@ -2,19 +2,21 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import { computed, toValue } from 'vue'
 
 /**
- * Accuracy of handling numerical values.
+ * 精确处理数值的乘法运算。
  *
- * @param value - The value
- * @param power - The power
- * @returns The result of multiplying the value with the power
+ * @param value - 要处理的值
+ * @param power - 乘数
+ * @returns 值与乘数相乘的结果
  */
 function accurateMultiply(value: number, power: number): number {
   const valueStr = value.toString()
 
   if (value > 0 && valueStr.includes('.')) {
+    // 获取小数位数
     const decimalPlaces = valueStr.split('.')[1].length
     const multiplier = 10 ** decimalPlaces
 
+    // 通过整数运算避免浮点数精度问题
     return (value * multiplier * power) / multiplier
   }
   else {
@@ -24,7 +26,7 @@ function accurateMultiply(value: number, power: number): number {
 
 export interface UsePrecisionOptions {
   /**
-   * Method to use for rounding
+   * 用于舍入的数学方法
    *
    * @default 'round'
    */
@@ -32,7 +34,7 @@ export interface UsePrecisionOptions {
 }
 
 /**
- * Reactively set the precision of a number.
+ * 响应式地设置数字的精度。
  *
  * @see https://vueuse.org/usePrecision
  *
@@ -44,9 +46,12 @@ export function usePrecision(
   options?: MaybeRefOrGetter<UsePrecisionOptions>,
 ): ComputedRef<number> {
   return computed<number>(() => {
+    // 获取响应式值
     const _value = toValue(value)
     const _digits = toValue(digits)
+    // 计算精度对应的乘数
     const power = 10 ** _digits
+    // 使用指定的舍入方法处理精度
     return Math[toValue(options)?.math || 'round'](accurateMultiply(_value, power)) / power
   })
 }

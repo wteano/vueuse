@@ -6,12 +6,15 @@ import { useEventListener } from '../useEventListener'
 
 export interface UseActiveElementOptions extends ConfigurableWindow, ConfigurableDocumentOrShadowRoot {
   /**
+   * 在shadow dom中深度搜索活动元素
    * Search active element deeply inside shadow dom
    *
    * @default true
    */
   deep?: boolean
   /**
+   * 当元素从DOM中移除时跟踪活动元素
+   * 底层使用MutationObserver
    * Track active element when it's removed from the DOM
    * Using a MutationObserver under the hood
    * @default false
@@ -20,6 +23,7 @@ export interface UseActiveElementOptions extends ConfigurableWindow, Configurabl
 }
 
 /**
+ * 响应式的 `document.activeElement`
  * Reactive `document.activeElement`
  *
  * @see https://vueuse.org/useActiveElement

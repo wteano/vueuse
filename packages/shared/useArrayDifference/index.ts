@@ -1,8 +1,17 @@
+/*
+ * @Author: wteano wzgtao@foxmail.com
+ * @Date: 2025-10-29 09:19:17
+ * @LastEditors: wteano wzgtao@foxmail.com
+ * @LastEditTime: 2025-10-29 11:50:13
+ * @FilePath: \vueuse\packages\shared\useArrayDifference\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import { computed, toValue } from 'vue'
 
 export interface UseArrayDifferenceOptions {
   /**
+   * 返回不对称差集
    * Returns asymmetric difference
    *
    * @see https://en.wikipedia.org/wiki/Symmetric_difference
@@ -31,9 +40,10 @@ export function useArrayDifference<T>(
 ): UseArrayDifferenceReturn<T>
 
 /**
+ * 响应式获取两个数组的差集
  * Reactive get array difference of two array
  * @see https://vueuse.org/useArrayDifference
- * @returns - the difference of two array
+ * @returns - 两个数组的差集
  * @param args
  *
  * @__NO_SIDE_EFFECTS__

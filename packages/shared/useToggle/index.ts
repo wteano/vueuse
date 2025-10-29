@@ -14,11 +14,11 @@ export function useToggle<Truthy, Falsy, T = Truthy | Falsy>(initialValue: Ref<T
 export function useToggle<Truthy = true, Falsy = false, T = Truthy | Falsy>(initialValue?: T, options?: UseToggleOptions<Truthy, Falsy>): [ShallowRef<T>, (value?: T) => T]
 
 /**
- * A boolean ref with a toggler
+ * 带有切换功能的布尔值引用
  *
  * @see https://vueuse.org/useToggle
- * @param [initialValue]
- * @param options
+ * @param [initialValue] 初始值
+ * @param options 配置选项
  *
  * @__NO_SIDE_EFFECTS__
  */
@@ -35,7 +35,7 @@ export function useToggle(
   const _value = shallowRef(initialValue) as ShallowRef<boolean>
 
   function toggle(value?: boolean) {
-    // has arguments
+    // 有参数时
     if (arguments.length) {
       _value.value = value!
       return _value.value

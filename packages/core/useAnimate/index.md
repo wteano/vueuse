@@ -4,68 +4,130 @@ category: Animation
 
 # useAnimate
 
-Reactive [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API).
+响应式Web动画API
+Reactive Web Animations API
 
-## Usage
+## 用法
 
-### Basic Usage
-
-The `useAnimate` function will return the animate and its control function.
-
-```vue
-<script setup lang="ts">
+```ts
 import { useAnimate } from '@vueuse/core'
-import { useTemplateRef } from 'vue'
 
-const el = useTemplateRef('el')
+const { isSupported, animate, play, pause, reverse, finish, cancel, pending, playState } = useAnimate(
+  target,
+  keyframes,
+  options
+)
+```
+
+### 基础用法
+
+```ts
+import { useAnimate } from '@vueuse/core'
+
+const target = ref()
+const keyframes = ref([
+  { transform: 'scale(1)' },
+  { transform: 'scale(1.5)' },
+])
+
 const {
+  // 动画是否被支持
+  // if the animation is supported
   isSupported,
+  // 动画对象
+  // the animation object
   animate,
-
-  // actions
+  // 动画状态
+  // the animation state
+  playState,
+  // 是否正在等待
+  // if the animation is pending
+  pending,
+  // 动画控制
+  // animation controls
   play,
   pause,
   reverse,
   finish,
   cancel,
-
-  // states
-  pending,
-  playState,
-  replaceState,
-  startTime,
-  currentTime,
-  timeline,
-  playbackRate,
-} = useAnimate(el, { transform: 'rotate(360deg)' }, 1000)
-</script>
-
-<template>
-  <span ref="el" style="display:inline-block">useAnimate</span>
-</template>
+} = useAnimate(target, keyframes, {
+  duration: 1000,
+  iterations: 5,
+  direction: 'alternate',
+})
 ```
 
-### Custom Keyframes
-
-Either an array of keyframe objects, or a keyframe object, or a `ref`. See [Keyframe Formats](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Keyframe_Formats) for more details.
+### 自定义关键帧
 
 ```ts
 import { useAnimate } from '@vueuse/core'
 
-const el = useTemplateRef<HTMLElement>('el')
-// ---cut---
-const keyframes = { transform: 'rotate(360deg)' }
-// Or
-const keyframes = [
-  { transform: 'rotate(0deg)' },
-  { transform: 'rotate(360deg)' },
-]
-// Or
-const keyframes = ref([
-  { clipPath: 'circle(20% at 0% 30%)' },
-  { clipPath: 'circle(20% at 50% 80%)' },
-  { clipPath: 'circle(20% at 100% 30%)' },
+const target = ref()
+const keyframes = computed(() => [
+  { transform: `translateX(${offset.value}px)` },
+  { transform: 'translateX(0)' },
 ])
 
-useAnimate(el, keyframes, 1000)
+const { play } = useAnimate(target, keyframes, {
+  duration: 1000,
+})
+```
+
+## 类型声明
+
+```ts
+export interface UseAnimateOptions extends KeyframeAnimationOptions, ConfigurableWindow {
+  /**
+   * 使用useAnimate时是否自动运行play
+   * Will automatically run play when `useAnimate` is used
+   *
+   * @default true
+   */
+  immediate?: boolean
+  /**
+   * 是否将动画的最终样式状态提交到正在动画的元素
+   * Whether to commits the end styling state of an animation to the element being animated
+   * In general, you should use `fill` option with this.
+   *
+   * @default false
+   */
+  commitStyles?: boolean
+  /**
+   * 是否保持动画
+   * Whether to persists the animation
+   *
+   * @default false
+   */
+  persist?: boolean
+  /**
+   * 动画初始化后执行
+   * Executed after animation initialization
+   */
+  onReady?: (animate: Animation) => void
+  /**
+   * 捕获到错误时的回调
+   * Callback when error is caught.
+   */
+  onError?: (e: unknown) => void
+}
+
+export type UseAnimateKeyframes = MaybeRef<Keyframe[] | PropertyIndexedKeyframes | null>
+
+export interface UseAnimateReturn {
+  isSupported: ComputedRef<boolean>
+  animate: ShallowRef<Animation | undefined>
+  play: () => void
+  pause: () => void
+  reverse: () => void
+  finish: () => void
+  cancel: () => void
+
+  pending: ComputedRef<boolean>
+  playState: ComputedRef<AnimationPlayState>
+  replaceState: ComputedRef<AnimationReplaceState>
+  startTime: WritableComputedRef<CSSNumberish | number | null>
+  currentTime: WritableComputedRef<CSSNumberish | number | null>
+  timeline: WritableComputedRef<AnimationTimeline | null>
+  playbackRate: WritableComputedRef<number>
+}
 ```

@@ -1,3 +1,11 @@
+/*
+ * @Author: wteano wzgtao@foxmail.com
+ * @Date: 2025-10-29 09:19:17
+ * @LastEditors: wteano wzgtao@foxmail.com
+ * @LastEditTime: 2025-10-29 10:51:39
+ * @FilePath: \vueuse\packages\core\useDevicesList\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 /* this implementation is original ported from https://github.com/logaretm/vue-use-web by Abdelrahman Awad */
 
 import type { ComputedRef, Ref, ShallowRef } from 'vue'
@@ -11,14 +19,14 @@ import { useSupported } from '../useSupported'
 export interface UseDevicesListOptions extends ConfigurableNavigator {
   onUpdated?: (devices: MediaDeviceInfo[]) => void
   /**
-   * Request for permissions immediately if it's not granted,
-   * otherwise label and deviceIds could be empty
+   * 如果未授予权限，则立即请求权限，
+   * 否则标签和设备ID可能为空
    *
    * @default false
    */
   requestPermissions?: boolean
   /**
-   * Request for types of media permissions
+   * 请求媒体权限的类型
    *
    * @default { audio: true, video: true }
    */
@@ -27,7 +35,7 @@ export interface UseDevicesListOptions extends ConfigurableNavigator {
 
 export interface UseDevicesListReturn {
   /**
-   * All devices
+   * 所有设备
    */
   devices: Ref<MediaDeviceInfo[]>
   videoInputs: ComputedRef<MediaDeviceInfo[]>
@@ -39,28 +47,28 @@ export interface UseDevicesListReturn {
 }
 
 /**
- * Reactive `enumerateDevices` listing available input/output devices
+ * 响应式 `enumerateDevices` 列出可用的输入/输出设备
  *
  * @see https://vueuse.org/useDevicesList
- * @param options
+ * @param options 配置选项
  */
 export function useDevicesList(options: UseDevicesListOptions = {}): UseDevicesListReturn {
   const {
-    navigator = defaultNavigator,
-    requestPermissions = false,
-    constraints = { audio: true, video: true },
-    onUpdated,
+    navigator = defaultNavigator, // 导航器对象
+    requestPermissions = false, // 是否请求权限
+    constraints = { audio: true, video: true }, // 媒体约束
+    onUpdated, // 更新回调
   } = options
 
-  const devices = deepRef([]) as Ref<MediaDeviceInfo[]>
-  const videoInputs = computed(() => devices.value.filter(i => i.kind === 'videoinput'))
-  const audioInputs = computed(() => devices.value.filter(i => i.kind === 'audioinput'))
-  const audioOutputs = computed(() => devices.value.filter(i => i.kind === 'audiooutput'))
-  const isSupported = useSupported(() => navigator && navigator.mediaDevices && navigator.mediaDevices.enumerateDevices)
-  const permissionGranted = shallowRef(false)
-  let stream: MediaStream | null
+  const devices = deepRef([]) as Ref<MediaDeviceInfo[]> // 设备列表
+  const videoInputs = computed(() => devices.value.filter(i => i.kind === 'videoinput')) // 视频输入设备
+  const audioInputs = computed(() => devices.value.filter(i => i.kind === 'audioinput')) // 音频输入设备
+  const audioOutputs = computed(() => devices.value.filter(i => i.kind === 'audiooutput')) // 音频输出设备
+  const isSupported = useSupported(() => navigator && navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) // 是否支持
+  const permissionGranted = shallowRef(false) // 权限是否已授予
+  let stream: MediaStream | null // 媒体流
 
-  async function update() {
+  async function update() { // 更新设备列表
     if (!isSupported.value)
       return
 
@@ -72,8 +80,8 @@ export function useDevicesList(options: UseDevicesListOptions = {}): UseDevicesL
     }
   }
 
-  async function ensurePermissions() {
-    const deviceName = constraints.video ? 'camera' : 'microphone'
+  async function ensurePermissions() { // 确保权限已授予
+    const deviceName = constraints.video ? 'camera' : 'microphone' // 设备名称
 
     if (!isSupported.value)
       return false
@@ -111,7 +119,7 @@ export function useDevicesList(options: UseDevicesListOptions = {}): UseDevicesL
     if (requestPermissions)
       ensurePermissions()
 
-    useEventListener(navigator!.mediaDevices, 'devicechange', update, { passive: true })
+    useEventListener(navigator!.mediaDevices, 'devicechange', update, { passive: true }) // 监听设备变化
     update()
   }
 

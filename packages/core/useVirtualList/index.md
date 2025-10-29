@@ -1,18 +1,18 @@
 ---
-category: Component
+category: 组件
 ---
 
 # useVirtualList
 
 ::: warning
-Consider using [`vue-virtual-scroller`](https://github.com/Akryum/vue-virtual-scroller) instead, if you are looking for more features.
+如果您需要更多功能，请考虑使用 [`vue-virtual-scroller`](https://github.com/Akryum/vue-virtual-scroller) 代替。
 :::
 
-Create virtual lists with ease. Virtual lists (sometimes called [_virtual scrollers_](https://vue-virtual-scroller-demo.netlify.app/)) allow you to render a large number of items performantly. They only render the minimum number of DOM nodes necessary to show the items within the `container` element by using the `wrapper` element to emulate the container element's full height.
+轻松创建虚拟列表。虚拟列表（有时称为[_虚拟滚动器_](https://vue-virtual-scroller-demo.netlify.app/)）允许您高效地渲染大量项目。它们只使用`wrapper`元素模拟`container`元素的完整高度，仅渲染在`container`元素内显示项目所需的最小DOM节点数量。
 
-## Usage
+## 用法
 
-### Simple list
+### 简单列表
 
 ```ts
 import { useVirtualList } from '@vueuse/core'
@@ -20,23 +20,23 @@ import { useVirtualList } from '@vueuse/core'
 const { list, containerProps, wrapperProps } = useVirtualList(
   Array.from(Array.from({ length: 99999 }).keys()),
   {
-    // Keep `itemHeight` in sync with the item's row.
+    // 保持 `itemHeight` 与项目的行高同步。
     itemHeight: 22,
   },
 )
 ```
 
-### Config
+### 配置
 
-| State      | Type     | Description                                                                                     |
+| 状态        | 类型     | 描述                                                                                     |
 | ---------- | -------- | ----------------------------------------------------------------------------------------------- |
-| itemHeight | `number` | ensure that the total height of the `wrapper` element is calculated correctly.\*                |
-| itemWidth  | `number` | ensure that the total width of the `wrapper` element is calculated correctly.\*                 |
-| overscan   | `number` | number of pre-rendered DOM nodes. Prevents whitespace between items if you scroll very quickly. |
+| itemHeight | `number` | 确保 `wrapper` 元素的总高度计算正确。\*                |
+| itemWidth  | `number` | 确保 `wrapper` 元素的总宽度计算正确。\*                 |
+| overscan   | `number` | 预渲染的DOM节点数量。如果您滚动非常快，可以防止项目之间出现空白。 |
 
-\* The `itemHeight` or `itemWidth` must be kept in sync with the height of each row rendered. If you are seeing extra whitespace or jitter when scrolling to the bottom of the list, ensure the `itemHeight` or `itemWidth` is the same height as the row.
+\* `itemHeight` 或 `itemWidth` 必须与每行的渲染高度保持同步。如果您在滚动到列表底部时看到额外的空白或抖动，请确保 `itemHeight` 或 `itemWidth` 与行的高度相同。
 
-### Reactive list
+### 响应式列表
 
 ```ts
 import { useToggle, useVirtualList } from '@vueuse/core'
@@ -56,21 +56,21 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 
 ```vue
 <template>
-  <p>Showing {{ isEven ? 'even' : 'odd' }} items</p>
+  <p>显示 {{ isEven ? '偶数' : '奇数' }} 项目</p>
   <button @click="toggle">
-    Toggle Even/Odd
+    切换偶数/奇数
   </button>
   <div v-bind="containerProps" style="height: 300px">
     <div v-bind="wrapperProps">
       <div v-for="item in list" :key="item.index" style="height: 22px">
-        Row: {{ item.data }}
+        行: {{ item.data }}
       </div>
     </div>
   </div>
 </template>
 ```
 
-### Horizontal list
+### 水平列表
 
 ```ts
 import { useVirtualList } from '@vueuse/core'
@@ -90,26 +90,26 @@ const { list, containerProps, wrapperProps } = useVirtualList(
   <div v-bind="containerProps" style="height: 300px">
     <div v-bind="wrapperProps">
       <div v-for="item in list" :key="item.index" style="width: 200px">
-        Row: {{ item.data }}
+        行: {{ item.data }}
       </div>
     </div>
   </div>
 </template>
 ```
 
-## Component Usage
+## 组件用法
 
 ```vue
 <template>
   <UseVirtualList :list="list" :options="options" height="300px">
     <template #default="props">
-      <!-- you can get current item of list here -->
+      <!-- 您可以在这里获取列表的当前项目 -->
       <div style="height: 22px">
-        Row {{ props.index }} {{ props.data }}
+        行 {{ props.index }} {{ props.data }}
       </div>
     </template>
   </UseVirtualList>
 </template>
 ```
 
-To scroll to a specific element, the component exposes `scrollTo(index: number) => void`.
+要滚动到特定元素，组件暴露了 `scrollTo(index: number) => void` 方法。

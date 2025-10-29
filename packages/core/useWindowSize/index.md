@@ -1,12 +1,12 @@
 ---
-category: Elements
+category: 元素
 ---
 
 # useWindowSize
 
-Reactive window size
+响应式的窗口大小
 
-## Usage
+## 用法
 
 ```vue
 <script setup lang="ts">
@@ -17,19 +17,19 @@ const { width, height } = useWindowSize()
 
 <template>
   <div>
-    Width: {{ width }}
-    Height: {{ height }}
+    宽度: {{ width }}
+    高度: {{ height }}
   </div>
 </template>
 ```
 
-## Component Usage
+## 组件用法
 
 ```vue
 <template>
   <UseWindowSize v-slot="{ width, height }">
-    Width: {{ width }}
-    Height: {{ height }}
+    宽度: {{ width }}
+    高度: {{ height }}
   </UseWindowSize>
 </template>
 ```

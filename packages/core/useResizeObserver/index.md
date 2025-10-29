@@ -1,12 +1,12 @@
 ---
-category: Elements
+category: 元素
 ---
 
 # useResizeObserver
 
-Reports changes to the dimensions of an Element's content or the border-box
+报告元素内容或边框盒尺寸的变化
 
-## Usage
+## 用法
 
 ```vue
 <script setup lang="ts">
@@ -19,7 +19,7 @@ const text = ref('')
 useResizeObserver(el, (entries) => {
   const entry = entries[0]
   const { width, height } = entry.contentRect
-  text.value = `width: ${width}, height: ${height}`
+  text.value = `宽度: ${width}, 高度: ${height}`
 })
 </script>
 
@@ -30,7 +30,7 @@ useResizeObserver(el, (entries) => {
 </template>
 ```
 
-## Directive Usage
+## 指令用法
 
 ```vue
 <script setup lang="ts">
@@ -41,7 +41,7 @@ const text = ref('')
 function onResizeObserver(entries) {
   const [entry] = entries
   const { width, height } = entry.contentRect
-  text.value = `width: ${width}, height: ${height}`
+  text.value = `宽度: ${width}, 高度: ${height}`
 }
 </script>
 

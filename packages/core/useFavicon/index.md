@@ -1,24 +1,24 @@
 ---
-category: Browser
+category: 浏览器
 ---
 
 # useFavicon
 
-Reactive favicon
+响应式favicon
 
-## Usage
+## 用法
 
 ```ts {3}
 import { useFavicon } from '@vueuse/core'
 
 const icon = useFavicon()
 
-icon.value = 'dark.png' // change current icon
+icon.value = 'dark.png' // 更改当前图标
 ```
 
-### Passing a source ref
+### 传递源引用
 
-You can pass a `ref` to it, changes from of the source ref will be reflected to your favicon automatically.
+您可以传递一个`ref`给它，源引用的变化将自动反映到您的favicon上。
 
 ```ts {7}
 import { useFavicon, usePreferredDark } from '@vueuse/core'
@@ -30,7 +30,7 @@ const favicon = computed(() => isDark.value ? 'dark.png' : 'light.png')
 useFavicon(favicon)
 ```
 
-When a source ref is passed, the return ref will be identical to the source ref
+当传递源引用时，返回的引用将与源引用相同
 
 ```ts
 import { useFavicon } from '@vueuse/core'

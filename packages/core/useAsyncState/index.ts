@@ -17,6 +17,7 @@ export type UseAsyncStateReturn<Data, Params extends any[], Shallow extends bool
 
 export interface UseAsyncStateOptions<Shallow extends boolean, D = any> {
   /**
+   * 当"immediate"为true时，首次执行promise的延迟时间（毫秒）
    * Delay for the first execution of the promise when "immediate" is true. In milliseconds.
    *
    * @default 0
@@ -24,9 +25,12 @@ export interface UseAsyncStateOptions<Shallow extends boolean, D = any> {
   delay?: number
 
   /**
+   * 在函数调用后立即执行promise
+   * 如果有延迟，将应用延迟
    * Execute the promise right after the function is invoked.
    * Will apply the delay if any.
    *
+   * 当设置为false时，您需要手动执行
    * When set to false, you will need to execute it manually.
    *
    * @default true
@@ -34,19 +38,24 @@ export interface UseAsyncStateOptions<Shallow extends boolean, D = any> {
   immediate?: boolean
 
   /**
+   * 捕获错误时的回调函数
    * Callback when error is caught.
    */
   onError?: (e: unknown) => void
 
   /**
+   * 捕获成功时的回调函数
    * Callback when success is caught.
    * @param {D} data
    */
   onSuccess?: (data: D) => void
 
   /**
+   * 在执行promise之前将状态设置为initialState
    * Sets the state to initialState before executing the promise.
    *
+   * 这在多次调用execute函数时很有用（例如，刷新数据）
+   * 当设置为false时，当前状态保持不变，直到promise解决
    * This can be useful when calling the execute function more than once (for
    * example, to refresh data). When set to false, the current state remains
    * unchanged until the promise resolves.
@@ -56,13 +65,14 @@ export interface UseAsyncStateOptions<Shallow extends boolean, D = any> {
   resetOnExecute?: boolean
 
   /**
+   * 使用shallowRef
    * Use shallowRef.
    *
    * @default true
    */
   shallow?: Shallow
   /**
-   *
+   * 执行execute函数时抛出错误
    * An error is thrown when executing the execute function
    *
    * @default false
@@ -71,12 +81,13 @@ export interface UseAsyncStateOptions<Shallow extends boolean, D = any> {
 }
 
 /**
+ * 响应式异步状态。不会阻塞您的setup函数，并在promise准备就绪时触发更改
  * Reactive async state. Will not block your setup function and will trigger changes once
  * the promise is ready.
  *
  * @see https://vueuse.org/useAsyncState
- * @param promise         The promise / async function to be resolved
- * @param initialState    The initial state, used until the first evaluation finishes
+ * @param promise         要解决的promise / 异步函数
+ * @param initialState    初始状态，在第一次评估完成之前使用
  * @param options
  */
 export function useAsyncState<Data, Params extends any[] = any[], Shallow extends boolean = true>(

@@ -10,22 +10,22 @@ import { useEventListener } from '../useEventListener'
 
 export interface OnClickOutsideOptions<Controls extends boolean = false> extends ConfigurableWindow {
   /**
-   * List of elements that should not trigger the event,
-   * provided as Refs or CSS Selectors.
+   * 不应触发事件的元素列表，
+   * 提供为Ref或CSS选择器。
    */
   ignore?: MaybeRefOrGetter<(MaybeElementRef | string)[]>
   /**
-   * Use capturing phase for internal event listener.
+   * 对内部事件监听器使用捕获阶段。
    * @default true
    */
   capture?: boolean
   /**
-   * Run handler function if focus moves to an iframe.
+   * 如果焦点移动到iframe，则运行处理函数。
    * @default false
    */
   detectIframe?: boolean
   /**
-   * Use controls to cancel/trigger listener.
+   * 使用控件来取消/触发监听器。
    * @default false
    */
   controls?: Controls
@@ -48,12 +48,12 @@ interface OnClickOutsideControlsReturn {
 let _iOSWorkaround = false
 
 /**
- * Listen for clicks outside of an element.
+ * 监听元素外部的点击。
  *
  * @see https://vueuse.org/onClickOutside
- * @param target
- * @param handler
- * @param options
+ * @param target 目标元素
+ * @param handler 处理函数
+ * @param options 选项
  */
 export function onClickOutside<
   T extends OnClickOutsideOptions,
@@ -85,13 +85,13 @@ export function onClickOutside(
       : noop
   }
 
-  // Fixes: https://github.com/vueuse/vueuse/issues/1520
-  // How it works: https://stackoverflow.com/a/39712411
+  // 修复: https://github.com/vueuse/vueuse/issues/1520
+  // 工作原理: https://stackoverflow.com/a/39712411
   if (isIOS && !_iOSWorkaround) {
     _iOSWorkaround = true
     const listenerOptions = { passive: true }
-    // Not using useEventListener because these event handlers must not be disposed.
-    // See previously linked references and https://github.com/vueuse/vueuse/issues/4724
+    // 不使用useEventListener，因为这些事件处理程序不应被释放。
+    // 参见之前链接的引用和 https://github.com/vueuse/vueuse/issues/4724
     Array.from(window.document.body.children)
       .forEach(el => el.addEventListener('click', noop, listenerOptions))
     window.document.documentElement.addEventListener('click', noop, listenerOptions)
@@ -113,8 +113,8 @@ export function onClickOutside(
   }
 
   /**
-   * Determines if the given target has multiple root elements.
-   * Referenced from: https://github.com/vuejs/test-utils/blob/ccb460be55f9f6be05ab708500a41ec8adf6f4bc/src/vue-wrapper.ts#L21
+   * 确定给定目标是否有多个根元素。
+   * 引用自: https://github.com/vuejs/test-utils/blob/ccb460be55f9f6be05ab708500a41ec8adf6f4bc/src/vue-wrapper.ts#L21
    */
   function hasMultipleRoots(target: MaybeComputedElementRef): boolean {
     const vm = toValue(target) as ComponentPublicInstance
@@ -128,7 +128,7 @@ export function onClickOutside(
     if (children == null || !Array.isArray(children))
       return false
 
-    // @ts-expect-error should be VNode
+    // @ts-expect-error 应该是VNode
     return children.some((child: VNode) => child.el === event.target || event.composedPath().includes(child.el))
   }
 
@@ -199,6 +199,7 @@ export function onClickOutside(
       },
     }
   }
-
-  return stop
+  else {
+    return stop
+  }
 }

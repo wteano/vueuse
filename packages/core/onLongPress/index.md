@@ -1,12 +1,15 @@
----
+继续---
 category: Sensors
 ---
 
 # onLongPress
+# 长按监听
 
 Listen for a long press on an element.
+监听元素的长按操作。
 
 Function provides modifiers in options
+函数在选项中提供了修饰符
 
 - stop
 - once
@@ -15,6 +18,7 @@ Function provides modifiers in options
 - self
 
 ## Usage
+## 用法
 
 ```vue no-twoslash
 <script setup lang="ts">
@@ -56,6 +60,7 @@ onLongPress(
 ```
 
 ## Component Usage
+## 组件用法
 
 ```vue no-twoslash
 <script setup lang="ts">
@@ -90,6 +95,7 @@ function resetComponent() {
 ```
 
 ## Directive Usage
+## 指令用法
 
 ```vue
 <script setup lang="ts">

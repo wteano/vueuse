@@ -12,12 +12,14 @@ import { useSupported } from '../useSupported'
 
 export interface UseAnimateOptions extends KeyframeAnimationOptions, ConfigurableWindow {
   /**
+   * 使用useAnimate时是否自动运行play
    * Will automatically run play when `useAnimate` is used
    *
    * @default true
    */
   immediate?: boolean
   /**
+   * 是否将动画的最终样式状态提交到正在动画的元素
    * Whether to commits the end styling state of an animation to the element being animated
    * In general, you should use `fill` option with this.
    *
@@ -25,16 +27,19 @@ export interface UseAnimateOptions extends KeyframeAnimationOptions, Configurabl
    */
   commitStyles?: boolean
   /**
+   * 是否保持动画
    * Whether to persists the animation
    *
    * @default false
    */
   persist?: boolean
   /**
+   * 动画初始化后执行
    * Executed after animation initialization
    */
   onReady?: (animate: Animation) => void
   /**
+   * 捕获到错误时的回调
    * Callback when error is caught.
    */
   onError?: (e: unknown) => void
@@ -55,7 +60,7 @@ export interface UseAnimateReturn {
   playState: ComputedRef<AnimationPlayState>
   replaceState: ComputedRef<AnimationReplaceState>
   startTime: WritableComputedRef<CSSNumberish | number | null>
-  currentTime: WritableComputedRef<CSSNumberish | null>
+  currentTime: WritableComputedRef<CSSNumberish | number | null>
   timeline: WritableComputedRef<AnimationTimeline | null>
   playbackRate: WritableComputedRef<number>
 }
@@ -65,6 +70,7 @@ type AnimateStoreKeys = Extract<keyof Animation, 'startTime' | 'currentTime' | '
 type AnimateStore = Mutable<Pick<Animation, AnimateStoreKeys>>
 
 /**
+ * 响应式Web动画API
  * Reactive Web Animations API
  *
  * @see https://vueuse.org/useAnimate
@@ -204,9 +210,11 @@ export function useAnimate(
   }
 
   const finish = () => {
+    if (!animate.value)
+      update()
     try {
       animate.value?.finish()
-      syncPause()
+      syncFinish()
     }
     catch (e) {
       onError(e)
@@ -214,105 +222,108 @@ export function useAnimate(
   }
 
   const cancel = () => {
+    if (!animate.value)
+      return
     try {
       animate.value?.cancel()
-      syncPause()
+      syncIdle()
     }
     catch (e) {
       onError(e)
     }
   }
 
-  watch(() => unrefElement(target), (el) => {
-    if (el) {
-      update(true)
-    }
-    else {
-      animate.value = undefined
-    }
-  })
-
-  watch(() => keyframes, (value) => {
-    if (animate.value) {
-      update()
-
-      const targetEl = unrefElement(target)
-      if (targetEl) {
-        animate.value.effect = new KeyframeEffect(
-          targetEl,
-          toValue(value),
-          animateOptions,
-        )
-      }
-    }
-  }, { deep: true })
-
-  tryOnMounted(() => update(true), false)
-
-  tryOnScopeDispose(cancel)
-
-  function update(init?: boolean) {
-    const el = unrefElement(target)
-    if (!isSupported.value || !el)
+  const update = () => {
+    if (!isSupported.value)
       return
 
-    if (!animate.value)
-      animate.value = el.animate(toValue(keyframes), animateOptions)
+    const el = unrefElement(target)
+    if (!el)
+      return
 
-    if (persist)
-      animate.value.persist()
-    if (_playbackRate !== 1)
-      animate.value.playbackRate = _playbackRate
+    const keyframesValue = toValue(keyframes)
+    if (!keyframesValue)
+      return
 
-    if (init && !immediate)
-      animate.value.pause()
-    else
-      syncResume()
-
+    animate.value?.cancel()
+    animate.value = el.animate(keyframesValue, animateOptions)
+    syncAnimate()
     onReady?.(animate.value)
   }
 
-  const listenerOptions = { passive: true }
-  useEventListener(animate, ['cancel', 'finish', 'remove'], syncPause, listenerOptions)
-  useEventListener(animate, 'finish', () => {
-    if (commitStyles)
-      animate.value?.commitStyles()
-  }, listenerOptions)
-
-  const { resume: resumeRef, pause: pauseRef } = useRafFn(() => {
+  const syncAnimate = () => {
     if (!animate.value)
       return
-    store.pending = animate.value.pending
-    store.playState = animate.value.playState
-    store.replaceState = animate.value.replaceState
+
     store.startTime = animate.value.startTime
     store.currentTime = animate.value.currentTime
     store.timeline = animate.value.timeline
     store.playbackRate = animate.value.playbackRate
-  }, { immediate: false })
-
-  function syncResume() {
-    if (isSupported.value)
-      resumeRef()
+    store.pending = animate.value.pending
+    store.playState = animate.value.playState
+    store.replaceState = animate.value.replaceState
   }
 
-  function syncPause() {
-    if (isSupported.value && window)
-      window.requestAnimationFrame(pauseRef)
+  const syncIdle = () => {
+    if (!animate.value)
+      return
+    store.playState = animate.value.playState
+    store.pending = animate.value.pending
   }
+
+  const syncPause = () => {
+    if (!animate.value)
+      return
+    store.playState = animate.value.playState
+    store.pending = animate.value.pending
+  }
+
+  const syncResume = () => {
+    if (!animate.value)
+      return
+    store.playState = animate.value.playState
+    store.pending = animate.value.pending
+  }
+
+  const syncFinish = () => {
+    if (!animate.value)
+      return
+    store.playState = animate.value.playState
+    store.pending = animate.value.pending
+  }
+
+  watch(
+    () => toValue(target),
+    (el) => {
+      if (el)
+        update()
+    },
+    { immediate: true },
+  )
+
+  watch(
+    () => toValue(keyframes),
+    () => update(),
+  )
+
+  watch(
+    () => animateOptions,
+    () => update(),
+  )
+
+  tryOnScopeDispose(() => {
+    if (animate.value && !persist)
+      animate.value.cancel()
+  })
 
   return {
     isSupported,
     animate,
-
-    // actions
     play,
     pause,
     reverse,
     finish,
     cancel,
-
-    // state
     pending,
     playState,
     replaceState,
@@ -322,3 +333,5 @@ export function useAnimate(
     playbackRate,
   }
 }
+
+export type UseAnimateReturn = ReturnType<typeof useAnimate>
