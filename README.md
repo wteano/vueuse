@@ -13,7 +13,7 @@ Vue组合式API实用工具集合
 <a href="https://www.npmjs.com/package/@vueuse/core" target="__blank"><img src="https://img.shields.io/npm/v/@vueuse/core?color=a1b858&label=" alt="NPM版本"></a>
 <a href="https://www.npmjs.com/package/@vueuse/core" target="__blank"><img alt="NPM下载量" src="https://img.shields.io/npm/dm/@vueuse/core?color=50a36f&label="></a>
 <a href="https://app.codecov.io/gh/vueuse/vueuse"><img alt="代码覆盖率" src="https://img.shields.io/codecov/c/github/vueuse/vueuse?color=42b883&labelColor=354a5e"></a>
-<a href="https://vueuse.org" target="__blank"><img src="https://img.shields.io/static/v1?label=&message=文档%20%26%20演示&color=1e8a7a" alt="文档与演示"></a>
+<a href="https://vueuse.org" target="__blank"><img src="https://img.shields.io/static/v1?label=&message=docs%20%26%20demos&color=1e8a7a" alt="文档与演示"></a>
 <img alt="函数数量" src="https://vueuse.org/badge-function-count.svg">
 <br>
 <a href="https://github.com/vueuse/vueuse" target="__blank"><img alt="GitHub星标" src="https://img.shields.io/github/stars/vueuse/vueuse?style=social"></a>
