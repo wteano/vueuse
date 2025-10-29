@@ -1,41 +1,41 @@
 ---
-category: Utilities
+category: 工具
 related: useThrottleFn
 ---
 
 # useDebounceFn
 
-Debounce execution of a function.
+防抖执行一个函数。
 
-> Debounce is an overloaded waiter: if you keep asking, your requests will be ignored until you stop and give them some time to think about your latest inquiry.
+> 防抖就像一个忙碌的服务员：如果你不停地点餐，你的请求将被忽略，直到你停下来并给他们一些时间来考虑你最新的请求。
 
-## Usage
+## 用法
 
 ```ts
 import { useDebounceFn, useEventListener } from '@vueuse/core'
 
 const debouncedFn = useDebounceFn(() => {
-  // do something
+  // 做一些事情
 }, 1000)
 
 useEventListener(window, 'resize', debouncedFn)
 ```
 
-You can also pass a 3rd parameter to this, with a maximum wait time, similar to [lodash debounce](https://lodash.com/docs/4.17.15#debounce)
+你也可以传递第三个参数，设置最大等待时间，类似于[lodash的debounce](https://lodash.com/docs/4.17.15#debounce)
 
 ```ts
 import { useDebounceFn, useEventListener } from '@vueuse/core'
 
-// If no invokation after 5000ms due to repeated input,
-// the function will be called anyway.
+// 如果由于重复输入在5000毫秒内没有调用，
+// 函数仍然会被调用。
 const debouncedFn = useDebounceFn(() => {
-  // do something
+  // 做一些事情
 }, 1000, { maxWait: 5000 })
 
 useEventListener(window, 'resize', debouncedFn)
 ```
 
-Optionally, you can get the return value of the function using promise operations.
+可选地，你可以使用Promise操作来获取函数的返回值。
 
 ```ts
 import { useDebounceFn } from '@vueuse/core'
@@ -46,14 +46,14 @@ debouncedRequest().then((value) => {
   console.log(value) // 'response'
 })
 
-// or use async/await
+// 或者使用async/await
 async function doRequest() {
   const value = await debouncedRequest()
   console.log(value) // 'response'
 }
 ```
 
-Since unhandled rejection error is quite annoying when developer doesn't need the return value, the promise will **NOT** be rejected if the function is canceled **by default**. You need to specify the option `rejectOnCancel: true` to capture the rejection.
+由于当开发者不需要返回值时，未处理的拒绝错误相当烦人，所以**默认情况下**，如果函数被取消，Promise将**不会**被拒绝。你需要指定选项`rejectOnCancel: true`来捕获拒绝。
 
 ```ts
 import { useDebounceFn } from '@vueuse/core'
@@ -62,16 +62,16 @@ const debouncedRequest = useDebounceFn(() => 'response', 1000, { rejectOnCancel:
 
 debouncedRequest()
   .then((value) => {
-    // do something
+    // 做一些事情
   })
   .catch(() => {
-    // do something when canceled
+    // 取消时做的一些事情
   })
 
-// calling it again will cancel the previous request and gets rejected
+// 再次调用将取消之前的请求并被拒绝
 setTimeout(debouncedRequest, 500)
 ```
 
-## Recommended Reading
+## 推荐阅读
 
-- [**Debounce vs Throttle**: Definitive Visual Guide](https://kettanaito.com/blog/debounce-vs-throttle)
+- [**防抖 vs 节流**：权威视觉指南](https://kettanaito.com/blog/debounce-vs-throttle)

@@ -9,47 +9,56 @@ import { useEventListener } from '../useEventListener'
 import { usePermission } from '../usePermission'
 import { useSupported } from '../useSupported'
 
+/**
+ * useClipboard函数的配置选项
+ */
 export interface UseClipboardOptions<Source> extends ConfigurableNavigator {
   /**
-   * Enabled reading for clipboard
+   * 启用剪贴板读取功能
    *
    * @default false
    */
   read?: boolean
 
   /**
-   * Copy source
+   * 复制源
    */
   source?: Source
 
   /**
-   * Milliseconds to reset state of `copied` ref
+   * 重置`copied`引用状态的毫秒数
    *
    * @default 1500
    */
   copiedDuring?: number
 
   /**
-   * Whether fallback to document.execCommand('copy') if clipboard is undefined.
+   * 如果剪贴板API未定义，是否回退到document.execCommand('copy')
    *
    * @default false
    */
   legacy?: boolean
 }
 
+/**
+ * useClipboard函数的返回值
+ */
 export interface UseClipboardReturn<Optional> {
+  /** 是否支持剪贴板API */
   isSupported: ComputedRef<boolean>
+  /** 剪贴板中的文本内容（只读） */
   text: Readonly<ShallowRef<string>>
-  copied: Readonly<ShallowRef<boolean>>
+  /** 是否已复制（只读） */
+  copied: Readonly<ShallowRef<boolean>
+  /** 复制函数 */
   copy: Optional extends true ? (text?: string) => Promise<void> : (text: string) => Promise<void>
 }
 
 /**
- * Reactive Clipboard API.
+ * 响应式剪贴板API。
  *
  * @see https://vueuse.org/useClipboard
- * @param options
- *
+ * @param options 配置选项
  * @__NO_SIDE_EFFECTS__
  */
 export function useClipboard(options?: UseClipboardOptions<undefined>): UseClipboardReturn<false>
@@ -63,14 +72,22 @@ export function useClipboard(options: UseClipboardOptions<MaybeRefOrGetter<strin
     legacy = false,
   } = options
 
+  /** 是否支持剪贴板API */
   const isClipboardApiSupported = useSupported(() => (navigator && 'clipboard' in navigator))
+  /** 剪贴板读取权限 */
   const permissionRead = usePermission('clipboard-read')
+  /** 剪贴板写入权限 */
   const permissionWrite = usePermission('clipboard-write')
+  /** 是否支持剪贴板功能 */
   const isSupported = computed(() => isClipboardApiSupported.value || legacy)
+  /** 剪贴板文本内容 */
   const text = shallowRef('')
+  /** 是否已复制 */
   const copied = shallowRef(false)
+  /** 复制状态重置定时器 */
   const timeout = useTimeoutFn(() => copied.value = false, copiedDuring, { immediate: false })
 
+  /** 更新剪贴板文本内容 */
   async function updateText() {
     let useLegacy = !(isClipboardApiSupported.value && isAllowed(permissionRead.value))
     if (!useLegacy) {
@@ -89,6 +106,7 @@ export function useClipboard(options: UseClipboardOptions<MaybeRefOrGetter<strin
   if (isSupported.value && read)
     useEventListener(['copy', 'cut'], updateText, { passive: true })
 
+  /** 复制文本到剪贴板 */
   async function copy(value = toValue(source)) {
     if (isSupported.value && value != null) {
       let useLegacy = !(isClipboardApiSupported.value && isAllowed(permissionWrite.value))
@@ -109,6 +127,7 @@ export function useClipboard(options: UseClipboardOptions<MaybeRefOrGetter<strin
     }
   }
 
+  /** 使用传统方法复制文本 */
   function legacyCopy(value: string) {
     const ta = document.createElement('textarea')
     ta.value = value
@@ -120,10 +139,12 @@ export function useClipboard(options: UseClipboardOptions<MaybeRefOrGetter<strin
     ta.remove()
   }
 
+  /** 使用传统方法读取文本 */
   function legacyRead() {
     return document?.getSelection?.()?.toString() ?? ''
   }
 
+  /** 检查权限状态是否允许 */
   function isAllowed(status: PermissionState | undefined) {
     return status === 'granted' || status === 'prompt'
   }

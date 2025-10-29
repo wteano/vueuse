@@ -1,3 +1,11 @@
+/*
+ * @Author: wteano wzgtao@foxmail.com
+ * @Date: 2025-10-29 09:19:17
+ * @LastEditors: wteano wzgtao@foxmail.com
+ * @LastEditTime: 2025-10-29 10:39:13
+ * @FilePath: \vueuse\packages\core\useTitle\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import type { ReadonlyRefOrGetter } from '@vueuse/shared'
 import type { ComputedRef, MaybeRef, MaybeRefOrGetter, Ref } from 'vue'
 import type { ConfigurableDocument } from '../_configurable'
@@ -8,16 +16,16 @@ import { useMutationObserver } from '../useMutationObserver'
 
 export type UseTitleOptionsBase = {
   /**
-   * Restore the original title when unmounted
-   * @param originTitle original title
-   * @returns restored title
+   * 卸载时恢复原始标题
+   * @param originTitle 原始标题
+   * @returns 恢复的标题
    */
   restoreOnUnmount?: false | ((originalTitle: string, currentTitle: string) => string | null | undefined)
 } & (
   {
     /**
-     * Observe `document.title` changes using MutationObserve
-     * Cannot be used together with `titleTemplate` option.
+     * 使用MutationObserver观察`document.title`的变化
+     * 不能与`titleTemplate`选项一起使用。
      *
      * @default false
      */
@@ -25,8 +33,8 @@ export type UseTitleOptionsBase = {
   }
   | {
     /**
-     * The template string to parse the title (e.g., '%s | My Website')
-     * Cannot be used together with `observe` option.
+     * 用于解析标题的模板字符串（例如：'%s | My Website'）
+     * 不能与`observe`选项一起使用。
      *
      * @default '%s'
      */
@@ -37,12 +45,12 @@ export type UseTitleOptionsBase = {
 export type UseTitleOptions = ConfigurableDocument & UseTitleOptionsBase
 
 /**
- * Reactive document title.
+ * 响应式的文档标题。
  *
  * @see https://vueuse.org/useTitle
  * @param newTitle
  * @param options
- * @description It's not SSR compatible. Your value will be applied only on client-side.
+ * @description 它不兼容SSR。您的值将仅在客户端应用。
  */
 export function useTitle(
   newTitle: ReadonlyRefOrGetter<string | null | undefined>,
@@ -60,12 +68,12 @@ export function useTitle(
     document = defaultDocument,
     restoreOnUnmount = t => t,
   } = options
-  const originalTitle = document?.title ?? ''
+  const originalTitle = document?.title ?? '' // 原始标题
 
-  const title = toRef(newTitle ?? document?.title ?? null)
-  const isReadonly = !!(newTitle && typeof newTitle === 'function')
+  const title = toRef(newTitle ?? document?.title ?? null) // 标题的响应式引用
+  const isReadonly = !!(newTitle && typeof newTitle === 'function') // 是否为只读
 
-  function format(t: string) {
+  function format(t: string) { // 格式化标题的函数
     if (!('titleTemplate' in options))
       return t
     const template = options.titleTemplate || '%s'
@@ -105,4 +113,4 @@ export function useTitle(
   return title
 }
 
-export type UseTitleReturn = ReturnType<typeof useTitle>
+export type UseTitleReturn = ReturnType<typeof useTitle> // useTitle函数的返回类型

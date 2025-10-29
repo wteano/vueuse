@@ -1,3 +1,11 @@
+/*
+ * @Author: wteano wzgtao@foxmail.com
+ * @Date: 2025-10-29 09:19:17
+ * @LastEditors: wteano wzgtao@foxmail.com
+ * @LastEditTime: 2025-10-29 10:38:19
+ * @FilePath: \vueuse\packages\core\useNow\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import type { Pausable } from '@vueuse/shared'
 import type { Ref } from 'vue'
 import { useIntervalFn } from '@vueuse/shared'
@@ -6,21 +14,21 @@ import { useRafFn } from '../useRafFn'
 
 export interface UseNowOptions<Controls extends boolean> {
   /**
-   * Expose more controls
+   * 暴露更多控制选项
    *
    * @default false
    */
   controls?: Controls
 
   /**
-   * Start the clock immediately
+   * 立即启动时钟
    *
    * @default true
    */
   immediate?: boolean
 
   /**
-   * Update interval in milliseconds, or use requestAnimationFrame
+   * 更新间隔（毫秒），或使用requestAnimationFrame
    *
    * @default requestAnimationFrame
    */
@@ -28,7 +36,7 @@ export interface UseNowOptions<Controls extends boolean> {
 }
 
 /**
- * Reactive current Date instance.
+ * 响应式的当前Date实例。
  *
  * @see https://vueuse.org/useNow
  * @param options
@@ -39,7 +47,7 @@ export function useNow(options?: UseNowOptions<false>): Ref<Date>
 export function useNow(options: UseNowOptions<true>): { now: Ref<Date> } & Pausable
 
 /**
- * Reactive current Date instance.
+ * 响应式的当前Date实例。
  *
  * @see https://vueuse.org/useNow
  * @param options
@@ -53,9 +61,9 @@ export function useNow(options: UseNowOptions<boolean> = {}) {
     immediate = true,
   } = options
 
-  const now = deepRef(new Date())
+  const now = deepRef(new Date()) // 当前时间的响应式引用
 
-  const update = () => now.value = new Date()
+  const update = () => now.value = new Date() // 更新当前时间的函数
 
   const controls: Pausable = interval === 'requestAnimationFrame'
     ? useRafFn(update, { immediate })
@@ -72,4 +80,4 @@ export function useNow(options: UseNowOptions<boolean> = {}) {
   }
 }
 
-export type UseNowReturn = ReturnType<typeof useNow>
+export type UseNowReturn = ReturnType<typeof useNow> // useNow函数的返回类型

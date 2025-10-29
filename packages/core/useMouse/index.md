@@ -1,12 +1,12 @@
 ---
-category: Sensors
+category: 传感器
 ---
 
 # useMouse
 
-Reactive mouse position
+响应式鼠标位置
 
-## Basic Usage
+## 基本用法
 
 ```ts twoslash
 import { useMouse } from '@vueuse/core'
@@ -14,8 +14,8 @@ import { useMouse } from '@vueuse/core'
 const { x, y, sourceType } = useMouse()
 ```
 
-Touch is enabled by default. To only detect mouse changes, set `touch` to `false`.
-The `dragover` event is used to track mouse position while dragging.
+默认启用触摸功能。如果只想检测鼠标变化，请将`touch`设置为`false`。
+使用`dragover`事件来跟踪拖动时的鼠标位置。
 
 ```ts twoslash
 import { useMouse } from '@vueuse/core'
@@ -23,9 +23,9 @@ import { useMouse } from '@vueuse/core'
 const { x, y } = useMouse({ touch: false })
 ```
 
-## Custom Extractor
+## 自定义提取器
 
-It's also possible to provide a custom extractor function to get the position from the event.
+也可以提供自定义提取器函数来从事件中获取位置。
 
 ```ts twoslash
 import type { UseMouseEventExtractor } from '@vueuse/core'
@@ -42,7 +42,7 @@ const extractor: UseMouseEventExtractor = event => (
 const { x, y, sourceType } = useMouse({ target: parentEl, type: extractor })
 ```
 
-## Component Usage
+## 组件用法
 
 ```vue
 <template>

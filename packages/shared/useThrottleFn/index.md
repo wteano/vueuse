@@ -1,26 +1,27 @@
 ---
-category: Utilities
+category: 工具
 related: refThrottled, refDebounced, useDebounceFn
 ---
 
 # useThrottleFn
 
-Throttle execution of a function. Especially useful for rate limiting execution of handlers on events like resize and scroll.
+节流执行一个函数。对于限制事件处理程序（如resize和scroll）的执行速率特别有用。
 
-> Throttle is a spring that throws balls: after a ball flies out it needs some time to shrink back, so it cannot throw any more balls unless it's ready.
+> 节流就像一个扔球的弹簧：球飞出后需要一些时间收缩回来，所以在准备好之前它不能扔出更多的球。
 
-## Usage
+## 用法
 
 ```ts
 import { useThrottleFn } from '@vueuse/core'
 
 const throttledFn = useThrottleFn(() => {
-  // do something, it will be called at most 1 time per second
+  // 做一些事情，它每秒最多被调用1次
 }, 1000)
 
 useEventListener(window, 'resize', throttledFn)
 ```
 
-## Recommended Reading
+## 推荐阅读
 
-- [**Debounce vs Throttle**: Definitive Visual Guide](https://kettanaito.com/blog/debounce-vs-throttle)
+- [**防抖 vs 节流**：权威视觉指南](https://kettanaito.com/blog/debounce-vs-throttle)
+```

@@ -1,14 +1,14 @@
 ---
-category: Utilities
+category: 工具
 ---
 
 # useCycleList
 
-Cycle through a list of items.
+循环遍历项目列表。
 
-<CourseLink href="https://vueschool.io/lessons/create-an-image-carousel-with-vueuse?friend=vueuse">Learn how to use useCycleList to create an image carousel with this FREE video lesson from Vue School!</CourseLink>
+<CourseLink href="https://vueschool.io/lessons/create-an-image-carousel-with-vueuse?friend=vueuse">通过Vue School的免费视频课程学习如何使用useCycleList创建图片轮播！</CourseLink>
 
-## Usage
+## 用法
 
 ```ts
 import { useCycleList } from '@vueuse/core'
