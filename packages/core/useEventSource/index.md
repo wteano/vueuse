@@ -1,12 +1,12 @@
 ---
-category: Network
+category: 网络
 ---
 
 # useEventSource
 
-An [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) or [Server-Sent-Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) instance opens a persistent connection to an HTTP server, which sends events in text/event-stream format.
+[EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource)或[服务器发送事件](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)实例打开一个到HTTP服务器的持久连接，该服务器以text/event-stream格式发送事件。
 
-## Usage
+## 用法
 
 ```ts
 import { useEventSource } from '@vueuse/core'
@@ -14,11 +14,11 @@ import { useEventSource } from '@vueuse/core'
 const { status, data, error, close } = useEventSource('https://event-source-url')
 ```
 
-See the [Type Declarations](#type-declarations) for more options.
+更多选项请参阅[类型声明](#type-declarations)。
 
-### Named Events
+### 命名事件
 
-You can define named events with the second parameter
+您可以使用第二个参数定义命名事件
 
 ```ts
 import { useEventSource } from '@vueuse/core'
@@ -31,19 +31,19 @@ const { event, data } = useEventSource(
 
 ### immediate
 
-Enable by default.
+默认启用。
 
-Establish the connection immediately when the composable is called.
+在调用组合式函数时立即建立连接。
 
 ### autoConnect
 
-Enable by default.
+默认启用。
 
-If url is provided as a ref, when the url changes, it will automatically reconnect to the new url.
+如果url作为ref提供，当url更改时，它将自动重新连接到新url。
 
-### Auto Reconnection on Errors
+### 错误时自动重连
 
-Reconnect on errors automatically (disabled by default).
+在错误时自动重新连接（默认禁用）。
 
 ```ts
 import { useEventSource } from '@vueuse/core'
@@ -57,7 +57,7 @@ const { status, data, close } = useEventSource(
 )
 ```
 
-Or with more controls over its behavior:
+或者对其行为进行更多控制：
 
 ```ts
 import { useEventSource } from '@vueuse/core'
@@ -70,16 +70,16 @@ const { status, data, close } = useEventSource(
       retries: 3,
       delay: 1000,
       onFailed() {
-        alert('Failed to connect EventSource after 3 retries')
+        alert('重试3次后无法连接EventSource')
       },
     },
   }
 )
 ```
 
-### Data Serialization
+### 数据序列化
 
-Apply custom transformations to incoming data using a serialization function.
+使用序列化函数对传入的数据应用自定义转换。
 
 ```ts
 import { useEventSource } from '@vueuse/core'
@@ -94,6 +94,6 @@ const { data } = useEventSource(
   }
 )
 
-// If server sends: '{"name":"John","age":30}'
-// data.value will be: { name: 'John', age: 30 }
+// 如果服务器发送：'{"name":"John","age":30}'
+// data.value将是：{ name: 'John', age: 30 }
 ```

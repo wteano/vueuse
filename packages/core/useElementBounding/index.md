@@ -1,12 +1,12 @@
 ---
-category: Elements
+category: 元素
 ---
 
 # useElementBounding
 
-Reactive [bounding box](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect) of an HTML element
+HTML元素的响应式[边界框](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect)
 
-## Usage
+## 用法
 
 ```vue
 <script setup lang="ts">
@@ -22,17 +22,17 @@ const { x, y, top, right, bottom, left, width, height } = useElementBounding(el)
 </template>
 ```
 
-## Component Usage
+## 组件用法
 
 ```vue
 <template>
   <UseElementBounding v-slot="{ width, height }">
-    Width: {{ width }} Height: {{ height }}
+    宽度: {{ width }} 高度: {{ height }}
   </UseElementBounding>
 </template>
 ```
 
-## Directive Usage
+## 指令用法
 
 ```vue
 <script setup lang="ts">
@@ -64,7 +64,7 @@ const options = {
 
 <template>
   <textarea v-element-bounding="onBounding" />
-  <!-- with options -->
+  <!-- 带选项 -->
   <textarea v-element-bounding="[onBounding, options]" />
 </template>
 ```

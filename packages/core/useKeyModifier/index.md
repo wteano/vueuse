@@ -4,11 +4,11 @@ category: Sensors
 
 # useKeyModifier
 
-Reactive [Modifier State](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/getModifierState). Tracks state of any of the [supported modifiers](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/getModifierState#browser_compatibility) - see Browser Compatibility notes.
+响应式[修饰符状态](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/getModifierState)。跟踪任何[支持的修饰符](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/getModifierState#browser_compatibility)的状态 - 请参阅浏览器兼容性说明。
 
-<CourseLink href="https://vueschool.io/lessons/alt-drag-to-clone-tasks?friend=vueuse">Learn useKeyModifier with this FREE video lesson from Vue School!</CourseLink>
+<CourseLink href="https://vueschool.io/lessons/alt-drag-to-clone-tasks?friend=vueuse">通过Vue School的免费视频课程学习useKeyModifier！</CourseLink>
 
-## Usage
+## 用法
 
 ```ts
 import { useKeyModifier } from '@vueuse/core'
@@ -18,9 +18,9 @@ const capsLockState = useKeyModifier('CapsLock')
 console.log(capsLockState.value)
 ```
 
-## Events
+## 事件
 
-You can customize which events will prompt the state to update. By default, these are `mouseup`, `mousedown`, `keyup`, `keydown`. To customize these events:
+您可以自定义哪些事件将提示状态更新。默认情况下，这些事件是`mouseup`、`mousedown`、`keyup`、`keydown`。要自定义这些事件：
 
 ```ts
 import { useKeyModifier } from '@vueuse/core'
@@ -29,16 +29,16 @@ const capsLockState = useKeyModifier('CapsLock', { events: ['mouseup', 'mousedow
 
 console.log(capsLockState) // null
 
-// Caps Lock turned on with key press
+// 按键打开大写锁定
 console.log(capsLockState) // null
 
-// Mouse button clicked
+// 点击鼠标按钮
 console.log(capsLockState) // true
 ```
 
-## Initial State
+## 初始状态
 
-By default, the returned ref will be `Ref<null>` until the first event is received. You can explicitly pass the initial state to it via:
+默认情况下，返回的ref将是`Ref<boolean | null>`，直到接收到第一个事件。您可以通过以下方式显式传递初始状态：
 
 ```ts
 import { useKeyModifier } from '@vueuse/core'

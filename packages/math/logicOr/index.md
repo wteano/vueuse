@@ -6,9 +6,9 @@ related: logicAnd, logicNot
 
 # logicOr
 
-`OR` conditions for refs.
+对多个ref进行`OR`条件判断。
 
-## Usage
+## 用法
 
 ```ts
 import { whenever } from '@vueuse/core'
@@ -18,6 +18,6 @@ const a = ref(true)
 const b = ref(false)
 
 whenever(logicOr(a, b), () => {
-  console.log('either a or b is truthy!')
+  console.log('a或b中至少有一个为真值！')
 })
 ```

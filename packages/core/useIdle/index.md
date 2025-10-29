@@ -4,19 +4,19 @@ category: Sensors
 
 # useIdle
 
-Tracks whether the user is being inactive.
+跟踪用户是否处于非活动状态。
 
-## Usage
+## 用法
 
 ```ts
 import { useIdle } from '@vueuse/core'
 
-const { idle, lastActive } = useIdle(5 * 60 * 1000) // 5 min
+const { idle, lastActive } = useIdle(5 * 60 * 1000) // 5分钟
 
-console.log(idle.value) // true or false
+console.log(idle.value) // true 或 false
 ```
 
-Programatically resetting:
+以编程方式重置：
 
 ```ts
 import { useCounter, useIdle } from '@vueuse/core'
@@ -24,23 +24,23 @@ import { watch } from 'vue'
 
 const { inc, count } = useCounter()
 
-const { idle, lastActive, reset } = useIdle(5 * 60 * 1000) // 5 min
+const { idle, lastActive, reset } = useIdle(5 * 60 * 1000) // 5分钟
 
 watch(idle, (idleValue) => {
   if (idleValue) {
     inc()
-    console.log(`Triggered ${count.value} times`)
-    reset() // restarts the idle timer. Does not change lastActive value
+    console.log(`触发了 ${count.value} 次`)
+    reset() // 重新启动空闲计时器。不会改变lastActive值
   }
 })
 ```
 
-## Component Usage
+## 组件用法
 
 ```vue
 <template>
   <UseIdle v-slot="{ idle }" :timeout="5 * 60 * 1000">
-    Is Idle: {{ idle }}
+    是否空闲: {{ idle }}
   </UseIdle>
 </template>
 ```

@@ -7,105 +7,105 @@ import { useEventListener } from '../useEventListener'
 
 export interface UseDraggableOptions {
   /**
-   * Only start the dragging when click on the element directly
+   * 只有直接点击元素时才开始拖动
    *
    * @default false
    */
   exact?: MaybeRefOrGetter<boolean>
 
   /**
-   * Prevent events defaults
+   * 阻止事件默认行为
    *
    * @default false
    */
   preventDefault?: MaybeRefOrGetter<boolean>
 
   /**
-   * Prevent events propagation
+   * 阻止事件传播
    *
    * @default false
    */
   stopPropagation?: MaybeRefOrGetter<boolean>
 
   /**
-   * Whether dispatch events in capturing phase
+   * 是否在捕获阶段派发事件
    *
    * @default true
    */
   capture?: boolean
 
   /**
-   * Element to attach `pointermove` and `pointerup` events to.
+   * 附加 `pointermove` 和 `pointerup` 事件的元素
    *
    * @default window
    */
   draggingElement?: MaybeRefOrGetter<HTMLElement | SVGElement | Window | Document | null | undefined>
 
   /**
-   * Element for calculating bounds (If not set, it will use the event's target).
+   * 用于计算边界的元素（如果未设置，将使用事件的目标）
    *
    * @default undefined
    */
   containerElement?: MaybeRefOrGetter<HTMLElement | SVGElement | null | undefined>
 
   /**
-   * Handle that triggers the drag event
+   * 触发拖动事件的句柄
    *
    * @default target
    */
   handle?: MaybeRefOrGetter<HTMLElement | SVGElement | null | undefined>
 
   /**
-   * Pointer types that listen to.
+   * 监听的指针类型
    *
    * @default ['mouse', 'touch', 'pen']
    */
   pointerTypes?: PointerType[]
 
   /**
-   * Initial position of the element.
+   * 元素的初始位置
    *
    * @default { x: 0, y: 0 }
    */
   initialValue?: MaybeRefOrGetter<Position>
 
   /**
-   * Callback when the dragging starts. Return `false` to prevent dragging.
+   * 开始拖动时的回调。返回 `false` 以防止拖动
    */
   onStart?: (position: Position, event: PointerEvent) => void | false
 
   /**
-   * Callback during dragging.
+   * 拖动过程中的回调
    */
   onMove?: (position: Position, event: PointerEvent) => void
 
   /**
-   * Callback when dragging end.
+   * 拖动结束时的回调
    */
   onEnd?: (position: Position, event: PointerEvent) => void
 
   /**
-   * Axis to drag on.
+   * 拖动轴
    *
    * @default 'both'
    */
   axis?: 'x' | 'y' | 'both'
 
   /**
-   * Disabled drag and drop.
+   * 禁用拖放
    *
    * @default false
    */
   disabled?: MaybeRefOrGetter<boolean>
 
   /**
-   * Mouse buttons that are allowed to trigger drag events.
+   * 允许触发拖动事件的鼠标按钮
    *
-   * - `0`: Main button, usually the left button or the un-initialized state
-   * - `1`: Auxiliary button, usually the wheel button or the middle button (if present)
-   * - `2`: Secondary button, usually the right button
-   * - `3`: Fourth button, typically the Browser Back button
-   * - `4`: Fifth button, typically the Browser Forward button
+   * - `0`: 主按钮，通常是左键或未初始化状态
+   * - `1`: 辅助按钮，通常是滚轮键或中键（如果存在）
+   * - `2`: 次按钮，通常是右键
+   * - `3`: 第四个按钮，通常是浏览器后退按钮
+   * - `4`: 第五个按钮，通常是浏览器前进按钮
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button#value
    * @default [0]
@@ -114,7 +114,7 @@ export interface UseDraggableOptions {
 }
 
 /**
- * Make elements draggable.
+ * 使元素可拖动
  *
  * @see https://vueuse.org/useDraggable
  * @param target
@@ -140,26 +140,26 @@ export function useDraggable(
     buttons = [0],
   } = options
 
-  const position = deepRef<Position>(
+  const position = deepRef<Position>( // 位置
     toValue(initialValue) ?? { x: 0, y: 0 },
   )
 
-  const pressedDelta = deepRef<Position>()
+  const pressedDelta = deepRef<Position>() // 按下的偏移量
 
-  const filterEvent = (e: PointerEvent) => {
+  const filterEvent = (e: PointerEvent) => { // 过滤事件
     if (pointerTypes)
       return pointerTypes.includes(e.pointerType as PointerType)
     return true
   }
 
-  const handleEvent = (e: PointerEvent) => {
+  const handleEvent = (e: PointerEvent) => { // 处理事件
     if (toValue(preventDefault))
       e.preventDefault()
     if (toValue(stopPropagation))
       e.stopPropagation()
   }
 
-  const start = (e: PointerEvent) => {
+  const start = (e: PointerEvent) => { // 开始拖动
     if (!toValue(buttons).includes(e.button))
       return
     if (toValue(options.disabled) || !filterEvent(e))
@@ -167,10 +167,10 @@ export function useDraggable(
     if (toValue(exact) && e.target !== toValue(target))
       return
 
-    const container = toValue(containerElement)
-    const containerRect = container?.getBoundingClientRect?.()
-    const targetRect = toValue(target)!.getBoundingClientRect()
-    const pos = {
+    const container = toValue(containerElement) // 容器元素
+    const containerRect = container?.getBoundingClientRect?.() // 容器矩形
+    const targetRect = toValue(target)!.getBoundingClientRect() // 目标矩形
+    const pos = { // 位置
       x: e.clientX - (container ? targetRect.left - containerRect!.left + container.scrollLeft : targetRect.left),
       y: e.clientY - (container ? targetRect.top - containerRect!.top + container.scrollTop : targetRect.top),
     }
@@ -179,14 +179,14 @@ export function useDraggable(
     pressedDelta.value = pos
     handleEvent(e)
   }
-  const move = (e: PointerEvent) => {
+  const move = (e: PointerEvent) => { // 移动
     if (toValue(options.disabled) || !filterEvent(e))
       return
     if (!pressedDelta.value)
       return
 
-    const container = toValue(containerElement)
-    const targetRect = toValue(target)!.getBoundingClientRect()
+    const container = toValue(containerElement) // 容器元素
+    const targetRect = toValue(target)!.getBoundingClientRect() // 目标矩形
     let { x, y } = position.value
     if (axis === 'x' || axis === 'both') {
       x = e.clientX - pressedDelta.value.x
@@ -205,7 +205,7 @@ export function useDraggable(
     onMove?.(position.value, e)
     handleEvent(e)
   }
-  const end = (e: PointerEvent) => {
+  const end = (e: PointerEvent) => { // 结束拖动
     if (toValue(options.disabled) || !filterEvent(e))
       return
     if (!pressedDelta.value)
@@ -216,23 +216,23 @@ export function useDraggable(
   }
 
   if (isClient) {
-    const config = () => ({
+    const config = () => ({ // 配置
       capture: options.capture ?? true,
       passive: !toValue(preventDefault),
     })
-    useEventListener(draggingHandle, 'pointerdown', start, config)
-    useEventListener(draggingElement, 'pointermove', move, config)
-    useEventListener(draggingElement, 'pointerup', end, config)
+    useEventListener(draggingHandle, 'pointerdown', start, config) // 监听指针按下
+    useEventListener(draggingElement, 'pointermove', move, config) // 监听指针移动
+    useEventListener(draggingElement, 'pointerup', end, config) // 监听指针抬起
   }
 
   return {
     ...toRefs(position),
     position,
-    isDragging: computed(() => !!pressedDelta.value),
+    isDragging: computed(() => !!pressedDelta.value), // 是否正在拖动
     style: computed(
-      () => `left:${position.value.x}px;top:${position.value.y}px;`,
+      () => `left:${position.value.x}px;top:${position.value.y}px;`, // 样式
     ),
   }
 }
 
-export type UseDraggableReturn = ReturnType<typeof useDraggable>
+export type UseDraggableReturn = ReturnType<typeof useDraggable> // useDraggable函数的返回类型

@@ -1,12 +1,12 @@
 ---
-category: Browser
+category: 浏览器
 ---
 
 # useEyeDropper
 
-Reactive [EyeDropper API](https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API)
+响应式[EyeDropper API](https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API)
 
-## Usage
+## 用法
 
 ```ts
 import { useEyeDropper } from '@vueuse/core'
@@ -14,7 +14,7 @@ import { useEyeDropper } from '@vueuse/core'
 const { isSupported, open, sRGBHex } = useEyeDropper()
 ```
 
-## Component Usage
+## 组件用法
 
 ```vue
 <template>

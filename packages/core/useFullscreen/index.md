@@ -4,9 +4,9 @@ category: Browser
 
 # useFullscreen
 
-Reactive [Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API). It adds methods to present a specific Element (and its descendants) in full-screen mode, and to exit full-screen mode once it is no longer needed. This makes it possible to present desired content—such as an online game—using the user's entire screen, removing all browser user interface elements and other applications from the screen until full-screen mode is shut off.
+响应式[全屏API](https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API)。它提供了将特定元素（及其后代）以全屏模式显示的方法，以及在不再需要时退出全屏模式的方法。这使得可以使用用户的整个屏幕来呈现所需内容（例如在线游戏），从屏幕上移除所有浏览器用户界面元素和其他应用程序，直到全屏模式关闭。
 
-## Usage
+## 用法
 
 ```ts
 import { useFullscreen } from '@vueuse/core'
@@ -14,7 +14,7 @@ import { useFullscreen } from '@vueuse/core'
 const { isFullscreen, enter, exit, toggle } = useFullscreen()
 ```
 
-Fullscreen specified element. Some platforms (like iOS's Safari) only allow fullscreen on video elements.
+使指定元素全屏显示。某些平台（如iOS的Safari）只允许视频元素全屏显示。
 
 ```vue
 <script setup lang="ts">
@@ -30,14 +30,14 @@ const { isFullscreen, enter, exit, toggle } = useFullscreen(el)
 </template>
 ```
 
-## Component Usage
+## 组件用法
 
 ```vue
 <template>
   <UseFullscreen v-slot="{ toggle }">
     <video />
     <button @click="toggle">
-      Go Fullscreen
+      进入全屏
     </button>
   </UseFullscreen>
 </template>

@@ -5,9 +5,9 @@ related: createGenericProjection
 
 # useProjection
 
-Reactive numeric projection from one domain to another.
+响应式地将数值从一个范围映射到另一个范围。
 
-## Usage
+## 用法
 
 ```ts
 import { useProjection } from '@vueuse/math'

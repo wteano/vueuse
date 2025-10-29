@@ -4,9 +4,9 @@ category: Elements
 
 # useIntersectionObserver
 
-Detects that a target element's visibility.
+检测目标元素的可见性。
 
-## Usage
+## 用法
 
 ```vue
 <script setup lang="ts">
@@ -31,7 +31,7 @@ const { stop } = useIntersectionObserver(
 </template>
 ```
 
-## Directive Usage
+## 指令用法
 
 ```vue
 <script setup lang="ts">
@@ -50,17 +50,17 @@ function onIntersectionObserver([entry]: IntersectionObserverEntry[]) {
 <template>
   <div>
     <p>
-      Scroll me down!
+      向下滚动我！
     </p>
     <div v-intersection-observer="onIntersectionObserver">
       <p>Hello world!</p>
     </div>
   </div>
 
-  <!-- with options -->
+  <!-- 带选项 -->
   <div ref="root">
     <p>
-      Scroll me down!
+      向下滚动我！
     </p>
     <div v-intersection-observer="[onIntersectionObserver, { root }]">
       <p>Hello world!</p>

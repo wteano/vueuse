@@ -4,9 +4,9 @@ category: '@Math'
 
 # useClamp
 
-Reactively clamp a value between two other values.
+响应式地将值限制在两个其他值之间。
 
-## Usage
+## 用法
 
 ```ts
 import { useClamp } from '@vueuse/math'
@@ -16,7 +16,7 @@ const max = shallowRef(10)
 const value = useClamp(0, min, max)
 ```
 
-You can also pass a `ref` and the returned `computed` will be updated when the source ref changes:
+你也可以传入一个`ref`，当源ref变化时，返回的`computed`会更新：
 
 ```ts
 import { useClamp } from '@vueuse/math'

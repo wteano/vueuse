@@ -5,9 +5,9 @@ alias: not
 
 # logicNot
 
-`NOT` condition for ref.
+对ref进行`NOT`条件判断。
 
-## Usage
+## 用法
 
 ```ts
 import { whenever } from '@vueuse/core'
@@ -16,6 +16,6 @@ import { logicNot } from '@vueuse/math'
 const a = ref(true)
 
 whenever(logicNot(a), () => {
-  console.log('a is now falsy!')
+  console.log('a现在是假值！')
 })
 ```

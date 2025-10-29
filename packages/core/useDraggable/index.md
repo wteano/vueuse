@@ -1,12 +1,12 @@
 ---
-category: Elements
+category: 元素
 ---
 
 # useDraggable
 
-Make elements draggable.
+使元素可拖动。
 
-## Usage
+## 用法
 
 ```vue
 <script setup lang="ts">
@@ -15,7 +15,7 @@ import { useTemplateRef } from 'vue'
 
 const el = useTemplateRef<HTMLElement>('el')
 
-// `style` will be a helper computed for `left: ?px; top: ?px;`
+// `style` 将是一个用于 `left: ?px; top: ?px;` 的辅助计算属性
 const { x, y, style } = useDraggable(el, {
   initialValue: { x: 40, y: 40 },
 })
@@ -23,40 +23,40 @@ const { x, y, style } = useDraggable(el, {
 
 <template>
   <div ref="el" :style="style" style="position: fixed">
-    Drag me! I am at {{ x }}, {{ y }}
+    拖动我！我在 {{ x }}, {{ y }}
   </div>
 </template>
 ```
 
-Set `preventDefault: true` to override the default drag-and-drop behavior of certain elements in the browser.
+设置 `preventDefault: true` 以覆盖浏览器中某些元素的默认拖放行为。
 
 ```ts
 import { useDraggable } from '@vueuse/core'
 // ---cut---
 const { x, y, style } = useDraggable(el, {
   preventDefault: true,
-  // with `preventDefault: true`
-  // you can disable the native behavior (e.g., for img)
-  // and control the drag-and-drop, preventing the browser interference.
+  // 使用 `preventDefault: true`
+  // 你可以禁用原生行为（例如，对于 img）
+  // 并控制拖放，防止浏览器干扰。
 })
 ```
 
-## Component Usage
+## 组件用法
 
 ```vue
 <template>
   <UseDraggable v-slot="{ x, y }" :initial-value="{ x: 10, y: 10 }">
-    Drag me! I am at {{ x }}, {{ y }}
+    拖动我！我在 {{ x }}, {{ y }}
   </UseDraggable>
 </template>
 ```
 
-For component usage, additional props `storageKey` and `storageType` can be passed to the component and enable the persistence of the element position.
+对于组件用法，可以向组件传递额外的属性 `storageKey` 和 `storageType`，并启用元素位置的持久化。
 
 ```vue
 <template>
   <UseDraggable storage-key="vueuse-draggable" storage-type="session">
-    Refresh the page and I am still in the same position!
+    刷新页面，我仍然在相同的位置！
   </UseDraggable>
 </template>
 ```
